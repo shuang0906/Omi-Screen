@@ -1,0 +1,14 @@
+.glow-center {
+  position: absolute;
+  width: 84%;
+  max-width: 560px;
+  aspect-ratio: 1;
+  left: 50%;
+  top: 150%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity, top;
+  color: #ffd7a3;
+  mix-blend-mode: normal;
+  z-index: 5;
+}

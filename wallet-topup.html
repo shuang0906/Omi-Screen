@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Wallet top-up animation</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif
+        }
+
+        body {
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden
+        }
+
+        .stage {
+            width: min(100vw, 93.738vh);
+            aspect-ratio: 988/1054;
+            position: relative;
+            background: linear-gradient(to bottom, #fdfdfd 0%, #fdfdfd 77%, #b0b0b0 97%, #a3a3a3 100%);
+            container-type: inline-size
+        }
+
+        .back {
+            position: absolute;
+            top: 3.4%;
+            left: 2.7%;
+            border: 0;
+            background: none;
+            color: #111;
+            font-size: 5cqw;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0
+        }
+
+        .phone {
+            position: absolute;
+            left: 31.1%;
+            top: 11.25%;
+            width: 41.3%;
+            height: 80.05%;
+            padding: 1.1%;
+            border-radius: 6.8cqw;
+            background: linear-gradient(110deg, #aaa, #e4e4e4 20%, #666 49%, #e3e3e3 78%, #aaa);
+            box-shadow: 1.8cqw 2.4cqw 3.6cqw #0002, .3cqw .2cqw .4cqw #0005
+        }
+
+        .phone:before {
+            content: '';
+            position: absolute;
+            inset: .45%;
+            border-radius: 6.6cqw;
+            background: #080808
+        }
+
+        .screen {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            border-radius: 5.7cqw;
+            background: #111
+        }
+
+        .island {
+            position: absolute;
+            z-index: 6;
+            width: 30%;
+            height: 3.8%;
+            background: #141414;
+            top: 1.4%;
+            left: 35%;
+            border-radius: 3cqw
+        }
+
+        .island:after {
+            content: '';
+            width: .5cqw;
+            height: .5cqw;
+            border-radius: 50%;
+            background: #102131;
+            position: absolute;
+            right: 12%;
+            top: 40%
+        }
+
+        .status {
+            position: absolute;
+            z-index: 5;
+            top: 3%;
+            left: 12%;
+            right: 8%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.6cqw;
+            font-weight: 700;
+            color: #fff
+        }
+
+        .icons {
+            display: flex;
+            align-items: center;
+            gap: .45cqw
+        }
+
+        .signal {
+            display: flex;
+            align-items: flex-end;
+            gap: .18cqw;
+            height: 1.1cqw
+        }
+
+        .signal i {
+            width: .28cqw;
+            background: #eee
+        }
+
+        .signal i:nth-child(1) {
+            height: 35%
+        }
+
+        .signal i:nth-child(2) {
+            height: 55%
+        }
+
+        .signal i:nth-child(3) {
+            height: 75%
+        }
+
+        .signal i:nth-child(4) {
+            height: 100%
+        }
+
+        .wifi {
+            font-size: 1.4cqw;
+            transform: rotate(-25deg)
+        }
+
+        .battery {
+            height: .9cqw;
+            width: 2.1cqw;
+            border: 1px solid #ddd;
+            border-radius: .2cqw;
+            background: #eee;
+            position: relative
+        }
+
+        .battery:after {
+            content: '';
+            position: absolute;
+            right: -.3cqw;
+            top: 25%;
+            width: .2cqw;
+            height: 50%;
+            background: #aaa
+        }
+
+        .underlying {
+            position: absolute;
+            inset: 0;
+            color: #aaa;
+            filter: blur(1.05cqw);
+            opacity: .28
+        }
+
+        .title {
+            position: absolute;
+            top: 11%;
+            width: 100%;
+            text-align: center;
+            font-size: 2cqw
+        }
+
+        .amount {
+            position: absolute;
+            top: 20%;
+            text-align: center;
+            width: 100%;
+            font-size: 5.6cqw;
+            font-weight: bold
+        }
+
+        .balance {
+            position: absolute;
+            top: 33%;
+            width: 100%;
+            text-align: center;
+            font-size: 1.4cqw
+        }
+
+        .card {
+            position: absolute;
+            top: 44%;
+            left: 9%;
+            right: 9%;
+            display: flex;
+            align-items: center;
+            gap: 2cqw;
+            font-size: 1.6cqw
+        }
+
+        .card b {
+            width: 3cqw;
+            height: 3cqw;
+            background: #3971db;
+            border-radius: 50%
+        }
+
+        .card span:last-child {
+            margin-left: auto
+        }
+
+        .keys {
+            position: absolute;
+            left: 10%;
+            right: 10%;
+            top: 53%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3cqw;
+            font-size: 2.5cqw;
+            text-align: center
+        }
+
+        .button {
+            opacity: 0;
+            position: absolute;
+            bottom: 6%;
+            left: 7%;
+            width: 86%;
+            height: 5%;
+            border-radius: 4cqw;
+            background: #eee
+        }
+
+        .glow {
+            position: absolute;
+            width: 135%;
+            aspect-ratio: 1;
+            left: 50%;
+            top: 94%;
+            transform: translate(-50%, -50%);
+            will-change: transform, opacity, top;
+            mix-blend-mode: screen
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(3cqw);
+            aspect-ratio: 1
+        }
+
+        .purple {
+            background: #7625fc;
+            width: 72%;
+            left: 0;
+            top: 21%
+        }
+
+        .pink {
+            background: #ed90c2;
+            width: 72%;
+            left: 17%;
+            top: 18%
+        }
+
+        .orange {
+            background: #eea160;
+            width: 74%;
+            right: 0;
+            top: 7%
+        }
+
+        .white {
+            z-index: 1;
+            background: #fff6e5;
+            width: 70%;
+            height: 26%;
+            opacity: .6;
+            aspect-ratio: auto;
+            left: 57%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            filter: blur(3.4cqw);
+            will-change: width, height, filter, opacity
+        }
+
+        .message {
+            position: absolute;
+            z-index: 4;
+            top: 50.2%;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1cqw;
+            color: #ddd;
+            font-size: 2cqw;
+            white-space: nowrap
+        }
+
+        .spinner {
+            width: 1.8cqw;
+            height: 1.8cqw;
+            border: .22cqw solid #ffffff35;
+            border-top-color: #ddd;
+            border-radius: 50%;
+            animation: spin .85s linear infinite
+        }
+
+        .check {
+            display: none;
+            border-radius: 50%;
+            background: #f4f4f4;
+            color: #111;
+            width: 1.9cqw;
+            height: 1.9cqw;
+            font-size: 1.4cqw;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold
+        }
+
+        .success .spinner {
+            display: none
+        }
+
+        .success .check {
+            display: flex
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 16px;
+            right: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fffc;
+            backdrop-filter: blur(12px);
+            padding: 9px 12px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 12px;
+            color: #555;
+            opacity: 0;
+            transition: opacity .2s
+        }
+
+        body:hover .controls,
+        .controls:focus-within {
+            opacity: 1
+        }
+
+        .controls button,
+        .controls select {
+            font: inherit;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 6px 10px;
+            color: #222;
+            cursor: pointer
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        @media(max-width:600px) {
+            .controls {
+                opacity: 1;
+                bottom: 10px;
+                right: 10px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="stage"><button class="back" aria-label="Replay animation">⟵</button>
+        <div class="phone">
+            <div class="screen">
+                <div class="underlying">
+                    <div class="title">Wallet</div>
+                    <div class="amount">$50</div>
+                    <div class="balance">Add money</div>
+                    <div class="card"><b></b><span>Debit card</span><span>••42</span></div>
+                    <div class="keys">
+                        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                    </div>
+                    <div class="button"></div>
+                </div>
+                <div class="glow">
+                    <div class="blob white"></div>
+                    <div class="blob purple"></div>
+                    <div class="blob pink"></div>
+                    <div class="blob orange"></div>
+                    
+                </div>
+                <div class="island"></div>
+                <div class="status"><span>9:41</span><span class="icons"><span
+                            class="signal"><i></i><i></i><i></i><i></i></span><span class="wifi">◔</span><span
+                            class="battery"></span></span></div>
+                <div class="message" role="status"><span class="spinner"></span><span class="check">✓</span><span
+                        id="label">Topping up wallet</span></div>
+            </div>
+        </div>
+    </main>
+    <div class="controls"><button id="replay">Replay</button><button id="pause">Pause</button><label>Speed <select
+                id="speed">
+                <option value="0.5">0.5×</option>
+                <option value="1" selected>1×</option>
+                <option value="1.5">1.5×</option>
+                <option value="2">2×</option>
+            </select></label><label><input type="checkbox" id="loop" checked> Loop</label></div>
+    <script>
+        const glow = document.querySelector('.glow'), under = document.querySelector('.underlying'), screen = document.querySelector('.screen'), label = document.querySelector('#label'); let start = 0, time = 0, last = 0, paused = false, speed = 1; const clamp = x => Math.max(0, Math.min(1, x)), smooth = x => { x = clamp(x); return x * x * (3 - 2 * x) }; function render(t) {
+            const sweep = smooth((t - 1550) / 500), fade = smooth((t - 1920) / 380), hide = smooth((t - 1540) / 180);// The colored circles retain their proportions. Only the white pill morphs.
+            const morph = smooth((t - 1550) / 230);
+            glow.style.top = `${94 - 110 * sweep}%`;
+            glow.style.transform = `translate(calc(-50% + ${Math.sin(t / 330) * 2}%),-50%)`;
+            const white = glow.querySelector('.white');
+            white.style.width = `${70 - 8 * morph}%`;
+            white.style.height = `${26 + 36 * morph}%`;
+            white.style.left = `${57 - 7 * morph}%`;
+            white.style.opacity = .6 + .4 * morph;
+            white.style.filter = `blur(${3.4 - .6 * morph}cqw)`; glow.style.opacity = 1 - fade; glow.querySelector('.orange').style.transform = `translate(${Math.sin(t / 210) * 7}%,${Math.cos(t / 360) * 5}%)`; glow.querySelector('.purple').style.transform = `translate(${Math.cos(t / 270) * 5}%,${Math.sin(t / 370) * 5}%)`; under.style.opacity = .28 * (1 - hide); const done = t >= 1930; screen.classList.toggle('success', done); label.textContent = done ? 'Wallet topped up' : 'Topping up wallet'; document.querySelector('.message').style.opacity = 1 - .8 * Math.sin(clamp((t - 1660) / 330) * Math.PI)
+        } function replay() { time = 0; last = performance.now(); paused = false; document.querySelector('#pause').textContent = 'Pause'; render(0) } function frame(now) { if (!paused) time += (now - last) * speed; last = now; if (time > 4200 && document.querySelector('#loop').checked) time = 0; render(time); requestAnimationFrame(frame) } document.querySelector('#replay').onclick = replay; document.querySelector('.back').onclick = replay; document.querySelector('#pause').onclick = () => { paused = !paused; document.querySelector('#pause').textContent = paused ? 'Play' : 'Pause' }; document.querySelector('#speed').onchange = e => speed = +e.target.value; document.addEventListener('keydown', e => { if (e.code === 'Space' && e.target.tagName !== 'SELECT') { e.preventDefault(); document.querySelector('#pause').click() } if (e.key.toLowerCase() === 'r') replay() }); replay(); requestAnimationFrame(frame);
+    </script>
+</body>
+
+</html>
