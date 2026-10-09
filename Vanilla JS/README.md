@@ -44,7 +44,7 @@
 
 ## Intent Plans（堆叠版）
 
-直接用浏览器打开 `plans-stack.html`。来自 Figma 节点 `3800:29077`，样式在 `assets/css/plans-stack.css`，交互在 `assets/js/plans-stack.js`。
+直接用浏览器打开 `plans stack/plans-stack.html`。来自 Figma 节点 `3800:29077`，样式在 `plans stack/assets/css/plans-stack.css`，交互在 `plans stack/assets/js/plans-stack.js`。
 
 - 卡片前后堆叠：前卡 266px，后面两张缩小、模糊并露出顶边。拖动下方刻度尺，前卡下移出画面，后面的卡依次放大变清晰补到前面，最后方淡入一张新卡；反向拖动则把上一张从下方拉回。卡片无限循环。
 - 刻度 25px 一格，每 3 格（75px）切换一张；深色刻度固定在中间，两端的刻度滑出时淡出。
@@ -59,3 +59,16 @@
 - 相邻卡片会渐变成设计稿中两侧的毛玻璃占位卡（白色 40%、模糊、61% 不透明度、缩小到 214.284 宽）。
 - 卡片在 `PLANS` 数组中修改；金额为占位。中间卡片保留 Figma GLASS 的边缘高光与折射（Chromium，复用 `assets/js/glass-cards.js`）。
 - 金额使用 [NumberFlow](https://number-flow.barvian.me)（`number-flow@0.6.2`，从 esm.sh 加载，需联网）：每张卡先显示 `from`，切换一开始就滚动到 `saved`；卡片变成两侧虚化卡后静默回到 `from`。刻度动画仍在卡片停稳、文字 overshoot 结束后才开始。每张卡的 `from`/`saved`/`goal` 与刻度动画参数 `anim` 在 `PLANS` 中。
+
+## Pie Chart
+
+直接用浏览器打开 `Pie Chart/pie-chart.html`。来自 Figma 节点 `552:4512`（272 × 272），样式在 `Pie Chart/assets/css/pie-chart.css`，交互在 `Pie Chart/assets/js/pie-chart.js`。
+
+- 五段环形由 JS 按 Figma 弧形数据生成：内径比 0.7353（外径 136、内径 100），四角圆角 4px，段间隔 1.6°，起始角 82.8°。比例改动后会自动重排。
+- 点击扇形选中：选中段变为黄色渐变（`#BCB754`），其余为玻璃段；中间金额滚动到新值，说明文字淡出淡入，指针绕圆心转到该段中点。聚焦后可用方向键 / Home / End 切换。
+- 数据在 `SEGMENTS` 数组（名称、百分比、金额）；除 Tokyo Trip 外的名称与金额为占位。
+- 玻璃段近似 Figma GLASS（光线 -45°）：Figma 填充渐变 + 白色内描边高光 + 柔和内发光，在 `#bababa` 背景上与设计稿一致。刻度环与指针使用 Figma 导出的 SVG。
+
+## Plans Stack - Cards Only
+
+Open `plans stack/plans-stack-cards.html` for the cards-only version. Drag the cards, scroll, or use the left/right arrow keys to switch plans. The original version remains at `plans stack/plans-stack.html`.

@@ -17,7 +17,7 @@
   --dark-gray: #575757;
   --secondary: #909090;
   --dark-green: #135519;
-  --bar: #999;
+  --bar: #a3a3a3;
   --bar-current: #9fe4a6;
   --sheet: rgba(255, 255, 255, 0.65);
   --font: "Suisse Intl", "Suisse Int'l", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -344,7 +344,7 @@ img { display: block; max-width: none; }
 }
 
 /* Marker origin = top-centre of the selected bar (graph coordinates).
-   --ec-x / --ec-y are registered so they animate, keeping the dash height in step with the move. */
+   --ec-x / --ec-y are updated together each frame, keeping the dash height in step with the move. */
 @property --ec-x { syntax: "<length>"; inherits: true; initial-value: 290.92px; }
 @property --ec-y { syntax: "<length>"; inherits: true; initial-value: 47.84px; }
 
@@ -355,7 +355,7 @@ img { display: block; max-width: none; }
   left: 0;
   pointer-events: none;
   transform: translate(var(--ec-x), var(--ec-y));
-  transition: --ec-x 0.18s ease, --ec-y 0.18s ease;
+  will-change: transform;
 }
 
 .ec-marker > * { position: absolute; }
@@ -372,7 +372,7 @@ img { display: block; max-width: none; }
   top: calc(var(--ec-y) * -1);
   width: 1px;
   height: max(0px, calc(var(--ec-y) - 7px));
-  background: repeating-linear-gradient(180deg, rgba(53, 158, 63, 0.6) 0 2px, transparent 2px 4px);
+  background: radial-gradient(circle, #9fe4a6 0.5px, transparent 0.5px) center top / 1px 4px repeat-y;
   opacity: 0;
   transition: opacity 0.3s ease;
 }

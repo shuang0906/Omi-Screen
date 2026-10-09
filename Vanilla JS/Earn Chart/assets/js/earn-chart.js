@@ -99,7 +99,7 @@
     el.style.setProperty("--i", i);
     el.style.height = `${h}px`;
     // Solid light-to-dark grays; alpha stays at 100% for every bar.
-    const shade = Math.round(238 + (153 - 238) * (i / DESIGN_HEIGHTS.length));
+    const shade = Math.round(238 + (163 - 238) * (i / DESIGN_HEIGHTS.length));
     el.style.setProperty("--bar", "rgb(" + shade + ", " + shade + ", " + shade + ")");
     el.style.opacity = 1;
     barsEl.appendChild(el);
@@ -144,6 +144,44 @@
     select(null);
   }
 
+  // Critically damped motion preserves velocity as the selected bar changes.
+  const markerReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let markerPosition = null;
+  let markerTarget = null;
+  const markerVelocity = { x: 0, y: 0 };
+  let markerFrame = 0;
+  let markerLastTime = null;
+  function drawMarker(now) {
+    markerFrame = 0;
+    const dt = markerLastTime === null ? 1 / 60 : Math.max(0, (now - markerLastTime) / 1000);
+    markerLastTime = now;
+    const frequency = 24;
+    const decay = Math.exp(-frequency * dt);
+    for (const axis of ['x', 'y']) {
+      const offset = markerPosition[axis] - markerTarget[axis];
+      const rate = markerVelocity[axis] + frequency * offset;
+      markerPosition[axis] = markerTarget[axis] + (offset + rate * dt) * decay;
+      markerVelocity[axis] = (markerVelocity[axis] - frequency * rate * dt) * decay;
+    }
+    const settled = markerReducedMotion.matches || (
+      Math.hypot(markerTarget.x - markerPosition.x, markerTarget.y - markerPosition.y) < 0.05 &&
+      Math.hypot(markerVelocity.x, markerVelocity.y) < 0.5
+    );
+    if (settled) {
+      markerPosition = { ...markerTarget };
+      markerVelocity.x = markerVelocity.y = 0;
+    }
+    marker.style.setProperty('--ec-x', `${markerPosition.x}px`);
+    marker.style.setProperty('--ec-y', `${markerPosition.y}px`);
+    if (!settled) markerFrame = requestAnimationFrame(drawMarker);
+    else markerLastTime = null;
+  }
+  function moveMarker(x, y) {
+    markerTarget = { x, y };
+    if (!markerPosition) markerPosition = { ...markerTarget };
+    if (!markerFrame) markerFrame = requestAnimationFrame(drawMarker);
+  }
+
   // index null → idle: marker rests on the current (last) bar, no bar highlighted.
   function select(index) {
     if (active) active.classList.remove("is-active");
@@ -152,8 +190,7 @@
     const v = i === LAST ? CURRENT : valueOf(h);
     active = index === null ? null : bars[i];
     if (active) active.classList.add("is-active");
-    marker.style.setProperty("--ec-x", `${centers[i]}px`);
-    marker.style.setProperty("--ec-y", `${PLOT_H - h}px`);
+    moveMarker(centers[i], PLOT_H - h);
     marker.classList.toggle("is-hover", index !== null);
     tagEl.textContent = `${v.toFixed(1)}%`;
     setApy(v);

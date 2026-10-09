@@ -1,6 +1,48 @@
 (() => {
   'use strict';
 
+  const root = document.querySelector('.plans');
+  if (!root) return;
+  // Touch-style pointer, scoped to this widget. Native touch keeps its normal behavior.
+  const touchCircle = document.createElement('span');
+  touchCircle.className = 'plans-touch-circle';
+  touchCircle.setAttribute('aria-hidden', 'true');
+  root.appendChild(touchCircle);
+  root.classList.add('has-touch-cursor');
+  let cursorPointer = null;
+  function moveTouchCircle(event) {
+    if (cursorPointer !== null && event.pointerId !== cursorPointer) return;
+    const rect = root.getBoundingClientRect();
+    const x = (event.clientX - rect.left) * root.offsetWidth / rect.width;
+    const y = (event.clientY - rect.top) * root.offsetHeight / rect.height;
+    touchCircle.style.transform = 'translate3d(' + (x - 18) + 'px,' + (y - 18) + 'px,0)';
+    touchCircle.classList.toggle('is-visible', event.pointerType !== 'touch' || cursorPointer !== null);
+  }
+  function releaseTouchCircle(event) {
+    if (cursorPointer !== null && event.pointerId !== cursorPointer) return;
+    cursorPointer = null;
+    touchCircle.classList.remove('is-pressed');
+    if (event.pointerType === 'touch') touchCircle.classList.remove('is-visible');
+  }
+  root.addEventListener('pointerenter', moveTouchCircle);
+  root.addEventListener('pointermove', moveTouchCircle);
+  root.addEventListener('pointerdown', (event) => {
+    if (!event.isPrimary || event.button !== 0) return;
+    cursorPointer = event.pointerId;
+    moveTouchCircle(event);
+    touchCircle.classList.add('is-pressed');
+  });
+  root.addEventListener('pointerleave', () => touchCircle.classList.remove('is-visible'));
+  window.addEventListener('pointerup', releaseTouchCircle);
+  window.addEventListener('pointercancel', releaseTouchCircle);
+  window.addEventListener('blur', () => {
+    cursorPointer = null;
+    touchCircle.classList.remove('is-visible', 'is-pressed');
+  });
+
+
+
+
   // Cards in the stack. Amounts are placeholders.
   const PLANS = [
     { name: 'Tokyo Trip', meta: 'Flight • Jan 15', img: './assets/img/plans/sea.png' },

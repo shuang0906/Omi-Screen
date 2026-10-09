@@ -234,6 +234,16 @@
         addControl(palette, `Spot ${index + 1}`, 'color', hex, value => duskSpots.set(hexToRgba(value, alpha), index * 4));
       });
       controls.append(palette);
+      const grayscaleLabel = document.createElement('label');
+      const grayscaleInput = document.createElement('input');
+      grayscaleInput.type = 'checkbox';
+      grayscaleInput.addEventListener('change', () => {
+        card?.classList.toggle('is-orb-grayscale', grayscaleInput.checked);
+      });
+      grayscaleLabel.append(grayscaleInput, ' Grayscale');
+      const grayscaleRow = document.createElement('div');
+      grayscaleRow.append(grayscaleLabel);
+      controls.append(grayscaleRow);
       addControl(controls, 'Fragmentation (patch density)', 'range', detail, value => { detail = value; }, { min: 0.1, max: 8, step: 0.1 });
       addControl(controls, 'Idle / released opacity', 'range', 0.5, value => card.style.setProperty('--orb-idle-opacity', value), { min: 0, max: 1, step: 0.01 });
       addControl(controls, 'Dragging opacity', 'range', 1, value => card.style.setProperty('--orb-drag-opacity', value), { min: 0, max: 1, step: 0.01 });

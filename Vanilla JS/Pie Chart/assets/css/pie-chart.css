@@ -1,0 +1,152 @@
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("../fonts/SuisseIntl-Book.otf") format("opentype");
+  font-weight: 450;
+  font-style: normal;
+  font-display: swap;
+  /* Figma lays text out on the hhea metrics; browsers use the OS/2 typo ones (USE_TYPO_METRICS). */
+  ascent-override: 98.6%;
+  descent-override: 31.1%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --canvas: #bababa;
+  --black: #0e0e0e;
+  --caption: rgba(14, 14, 14, 0.3);
+  --font: "Suisse Intl", "Suisse Int'l", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  background: var(--canvas);
+  font-family: var(--font);
+  font-weight: 450;
+  font-feature-settings: "salt" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+p { margin: 0; font: inherit; }
+
+img { display: block; max-width: none; }
+
+/* ---------- Chart (272 × 272) ---------- */
+
+.pc {
+  position: relative;
+  width: 272px;
+  height: 272px;
+}
+
+.pc-segments {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+
+/* Each segment has a glass layer and a selected (yellow) layer; selection crossfades them. */
+.pc-seg {
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pc-seg-glass,
+.pc-seg-selected,
+.pc-seg-sheen {
+  transition: opacity 0.45s var(--ease);
+}
+
+.pc-seg-selected { opacity: 0; }
+.pc-seg[aria-checked="true"] .pc-seg-selected { opacity: 1; }
+.pc-seg[aria-checked="true"] .pc-seg-glass { opacity: 0; }
+
+.pc-seg-sheen { opacity: 0; }
+.pc-seg[aria-checked="false"]:hover .pc-seg-sheen { opacity: 1; }
+
+.pc-seg-focus {
+  fill: none;
+  stroke: var(--black);
+  stroke-width: 1.5;
+  opacity: 0;
+  pointer-events: none;
+}
+.pc-seg:focus-visible .pc-seg-focus { opacity: 0.5; }
+
+/* Tick Ring: 170 × 170 ellipse at (51, 51), 3px centred stroke → 173 × 173 export. */
+.pc-ticks {
+  position: absolute;
+  left: 49.5px;
+  top: 49.5px;
+  pointer-events: none;
+}
+
+/* Pointer sits at (58.18, 180.99) for the first segment; JS turns the whole 272 box about the centre. */
+.pc-pointer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: transform 0.7s var(--ease);
+}
+
+.pc-pointer img {
+  position: absolute;
+  left: 58.18px;
+  top: 180.99px;
+}
+
+/* Label: 94 × 49 at (89, 112) — centred, 0.5px below the middle. */
+.pc-label {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 0.5px);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  line-height: 1.32;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.pc-value {
+  font-size: 23.093px;
+  color: var(--black);
+}
+
+.pc-caption {
+  font-size: 13.196px;
+  color: var(--caption);
+  transition: opacity 0.2s ease, transform 0.35s var(--ease);
+}
+
+.pc-caption [data-pc="caption"] {
+  display: inline-block;
+  transition: opacity 0.2s ease, transform 0.35s var(--ease);
+}
+
+.pc-caption [data-pc="caption"].is-out {
+  opacity: 0;
+  transform: translateY(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-seg-glass,
+  .pc-seg-selected,
+  .pc-seg-sheen,
+  .pc-pointer,
+  .pc-caption { transition: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-caption [data-pc="caption"] { transition: none; }
+}

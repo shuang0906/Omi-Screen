@@ -112,6 +112,7 @@ body {
 .plan-name {
   margin: 0;
   color: #fff;
+  width:1000px;
   font-size: 21.521px;
   font-weight: 400;
   letter-spacing: -.2152px;
@@ -224,3 +225,39 @@ body {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* Touch circle replaces the native pointer inside the widget. */
+.plans.has-touch-cursor,
+.plans.has-touch-cursor * { cursor: none !important; }
+
+.plans-touch-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.plans-touch-circle.is-visible { opacity: 1; }
+.plans-touch-circle::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 120ms ease, background 120ms ease;
+}
+.plans-touch-circle.is-pressed::before {
+  transform: scale(0.8);
+  background: rgba(255, 255, 255, 0.6);
+}
+@media (prefers-reduced-motion: reduce) {
+  .plans-touch-circle, .plans-touch-circle::before { transition: none; }
+}
+

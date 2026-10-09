@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pie Chart</title>
+<link rel="stylesheet" href="./assets/css/pie-chart.css">
+</head>
+<body>
+<!-- Pie Chart: Figma "Untitled" node 552:4512. 272 × 272.
+     Segments are drawn by assets/js/pie-chart.js from the Figma arc data (inner radius 0.7353, 4px corners, 1.6° gaps).
+     Click / tap a segment, or focus the chart and use the arrow keys, to select it. Data lives in SEGMENTS. -->
+<main class="pc" data-pc>
+  <svg class="pc-segments" data-pc="segments" width="272" height="272" viewBox="0 0 272 272"
+       role="radiogroup" aria-label="Savings plans"></svg>
+
+  <img class="pc-ticks" src="./assets/img/tick-ring.svg" width="173" height="173" alt="">
+
+  <div class="pc-pointer" data-pc="pointer" aria-hidden="true">
+    <img src="./assets/img/pointer.svg" width="9.995" height="9.83" alt="">
+  </div>
+
+  <div class="pc-label" aria-live="polite">
+    <p class="pc-value"><number-flow data-pc="value">$52,000</number-flow></p>
+    <p class="pc-caption"><number-flow data-pc="percent">35%</number-flow> <span data-pc="caption">Tokyo Trip</span></p>
+  </div>
+</main>
+<script type="module">
+  import 'https://esm.sh/number-flow@0.6.2';
+  import { continuous } from 'https://esm.sh/number-flow@0.6.2/plugins';
+  window.NumberFlowPlugins = { continuous };
+  window.dispatchEvent(new Event('numberflow-ready'));
+</script>
+<script src="./assets/js/pie-chart.js"></script>
+</body>
+</html>

@@ -381,3 +381,6 @@ button {
 .dw-demo { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 24px; padding: 24px; }
 .dw-shader-controls { max-width: 360px; }
 .dw-shader-controls p { margin: 1em 0; }
+
+.dw.is-orb-grayscale .dw-orb,
+.dw.is-orb-grayscale .dw-glow { filter: grayscale(1); }
