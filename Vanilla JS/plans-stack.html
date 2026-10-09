@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intent Plans Stack</title>
+<link rel="stylesheet" href="./assets/css/plans-stack.css">
+</head>
+
+<body>
+<!-- Intent Plans (stack version): from Figma "MegaETH (Internal)" node 3800:29077.
+     Drag the ruler: the front card drops out of frame, the stack moves forward and a new
+     card appears at the back. Cards loop infinitely. Behaviour in assets/js/plans-stack.js. -->
+<main class="plans">
+  <section class="plans-stage" aria-roledescription="carousel" aria-label="Intent plans">
+    <header class="plans-head" style="display:none;">
+      <h1 class="plans-title">Intent Plans</h1>
+      <a class="plans-link" href="#">See all<img src="./assets/img/plans/chevron.svg" width="14" height="14" alt=""></a>
+    </header>
+
+    <div class="stack" data-stack="cards"></div>
+
+    <div class="ruler" data-stack="ruler" role="slider" tabindex="0" aria-label="Drag the ruler to change plan" aria-valuemin="1">
+      <svg class="ruler-ticks" data-stack="ticks" width="351.5" height="18" viewBox="0 0 351.5 18" fill="none" aria-hidden="true"></svg>
+    </div>
+
+    <button style="display:none;" class="add-plan" type="button">
+      <span class="add-plan-icon">+</span>
+      Add Plan
+    </button>
+  </section>
+</main>
+<div class="sr-only" aria-live="polite" data-announcement></div>
+
+<script src="./assets/js/plans-stack.js"></script>
+</body>
+
+</html>

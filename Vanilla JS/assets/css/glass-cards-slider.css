@@ -1,0 +1,90 @@
+/* Only the new slider uses these overrides; the original two demos stay intact. */
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("../SuisseIntl-Book.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --frame-w: 260px;
+  --frame-h: 347px;
+  --gap: 18px;
+  --slider-background-padding: 80px;
+}
+.slider-window {
+  position: fixed;
+  left: calc(50% - 185px);
+  top: calc(50% - 208.5px);
+  width: 370px;
+  height: 417px;
+  overflow: visible;
+  border-radius: 20px;
+  z-index: 1;
+  /* Keep backdrop input unclipped. The foreground cover hides the outside
+     only after the glass has sampled the full gradient underneath. */
+}
+.slider-backdrop {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: calc(370px + var(--slider-background-padding) * 2);
+  height: calc(417px + var(--slider-background-padding) * 2);
+  transform: translate(-50%, -50%);
+  background: linear-gradient(to bottom, #ffff80 -11.026%, #424200 88.372%);
+  border-radius: 20px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.slider-background-cover {
+  position: fixed;
+  left: calc(50% - 185px);
+  top: calc(50% - 208.5px);
+  width: 370px;
+  height: 417px;
+  border-radius: 20px;
+  box-shadow: 0 0 0 100vmax var(--bg);
+  pointer-events: none;
+  z-index: 2;
+}
+.slider-backdrop .slider-background-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  opacity: 0;
+}
+.slider-backdrop .slider-background-layer:first-child { opacity: 1; }
+.slider-backdrop .bg--yellow .bg-fill {
+  height: calc(100% + 9px);
+  border-radius: inherit;
+}
+.glass-slider {
+  font-family: "Suisse Intl", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: absolute;
+  width: 370px;
+  height: 417px;
+  overflow: visible;
+  background: transparent;
+  color: var(--white);
+}
+.glass-slider .card {
+  width: var(--frame-w);
+  height: var(--frame-h);
+  will-change: transform;
+  transform-origin: 50% 58%;
+  box-shadow:
+    0 var(--motion-shadow-y, 6px) var(--motion-shadow-blur, 14px) -7px rgba(35, 42, 32, .18),
+    inset 1px 1px 2px rgba(255, 255, 255, .12),
+    inset -1px -1px 2px rgba(255, 255, 255, .06);
+}
+.glass-slider .card-img,
+.glass-slider .card-body,
+.glass-slider [data-parallax] { will-change: transform; }
+.slider-window .indicator { z-index: 4; }
+.slider-window .indicator-item.is-active .indicator-fill {
+  animation: none;
+}

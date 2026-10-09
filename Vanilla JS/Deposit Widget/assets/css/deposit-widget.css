@@ -1,0 +1,378 @@
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("../fonts/SuisseIntl-Book.otf") format("opentype");
+  font-weight: 450;
+  font-style: normal;
+  font-display: swap;
+  /* Figma lays text out on the hhea metrics; browsers use the OS/2 typo ones (USE_TYPO_METRICS). */
+  ascent-override: 98.6%;
+  descent-override: 31.1%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --canvas: #bababa;
+  --card: rgba(255, 255, 255, 0.65);
+  --ink: #000;
+  --ink-muted: rgba(14, 14, 14, 0.3);
+  --chip-active: #0e0e0e;
+  --tick: #0e0e0e;
+  --cta-text: #f8f8f8;
+  --cta-glow: #81d4ff;
+  --font: "Suisse Intl", "Suisse Int'l", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  background: var(--canvas);
+  font-family: var(--font);
+  font-feature-settings: "salt" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+p { margin: 0; }
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Card ------------------------------------------------------------------ */
+.dw {
+  position: relative;
+  width: 370px;
+  height: 555px;
+  flex: none;
+  overflow: hidden;
+  border-radius: 32px;
+  background: var(--card);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dw-glow {
+  position: absolute;
+  left: -65px;
+  top: 381px;
+  width: 500px;
+  height: 270px;
+  pointer-events: none;
+}
+
+/* Liquid Orb (WebGPU, assets/js/liquid-orb.js) rising behind the CTA. The orb is drawn at
+   72% of the canvas half-size, so a 500px canvas gives a 360px ball; its top sits at y≈445. */
+.dw-orb {
+  position: absolute;
+  left: 50%;
+  top: 305px;
+  width: 800px;
+  height: 800px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  filter: blur(10px);
+  /* filter: saturate(); */
+}
+
+.dw.has-orb .dw-orb { opacity: 0.5; }
+.dw.has-orb.is-orb-dragging .dw-orb { opacity: 1; }
+.dw.has-orb .dw-glow { opacity: 0; }
+.dw-glow { transition: opacity 0.6s ease; }
+
+/* Potential yield --------------------------------------------------------- */
+.dw-yield {
+  position: absolute;
+  left: 83.38px;
+  top: 138.09px;
+  width: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.dw-yield-title {
+  position: relative;
+  font-size: 16px;
+  line-height: 1.32;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.dw-yield-info {
+  position: absolute;
+  left: 126px;
+  top: 4.29px;
+  width: 15.4277px;
+  height: 15.4277px;
+}
+
+.dw-yield-value {
+  align-self: center;
+  font-size: 42.005px;
+  line-height: 1.32;
+  color: var(--ink);
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Chips sit at the Figma offsets (0 / 45 / 92 / 134) in one grid cell. */
+/* NumberFlow fades digits at its edges; keep the mask small at these sizes */
+.dw number-flow {
+  --number-flow-mask-height: 0.15em;
+}
+
+.dw-chips {
+  position: relative;
+  display: inline-grid;
+  grid-template: max-content / max-content;
+  place-items: start;
+}
+
+.dw-chip {
+  grid-area: 1 / 1;
+  position: relative;
+  z-index: 1;
+  padding: 5px 12px;
+  font-size: 12px;
+  line-height: 1.32;
+  color: var(--ink-muted);
+  border-radius: 1000px;
+  white-space: nowrap;
+  transition: color 0.25s ease;
+}
+
+.dw-chip[data-months="6"] { margin-left: 45px; }
+.dw-chip[data-months="12"] { margin-left: 92px; }
+.dw-chip[data-months="36"] { margin-left: 134px; }
+
+.dw-chip:hover { color: rgba(14, 14, 14, 0.6); }
+
+.dw-chip[aria-checked="true"] { color: #fff; }
+
+.dw-chip:focus-visible,
+.dw-ruler:focus-visible,
+.dw-cta:focus-visible {
+  outline: 2px solid var(--cta-glow);
+  outline-offset: 2px;
+}
+
+.dw-chip-pill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 1000px;
+  background: var(--chip-active);
+  transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.2, 1), width 0.35s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+/* Amount + ruler --------------------------------------------------------- */
+.dw-amount {
+  position: absolute;
+  left: 50%;
+  top: 339px;
+  transform: translateX(-50%);
+  font-size: 20px;
+  line-height: 1.32;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* Ruler: Figma node 514:7183 (354px wide, centred). Ticks are drawn by deposit-widget.js. */
+.dw-ruler {
+  position: absolute;
+  left: 8px;
+  top: 358px;
+  width: 354px;
+  height: 80px;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.dw-ruler.is-dragging { cursor: grabbing; }
+
+/* Ticks and labels fade out towards both sides */
+.dw-scale {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 32%, #000 68%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 32%, #000 68%, transparent 100%);
+}
+
+.dw-ticks i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--tick);
+  will-change: transform, opacity;
+}
+
+.dw-labels span {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  font-size: 12px;
+  line-height: 1.32;
+  color: var(--ink);
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+/* Glass pill with the needle (Figma "CTA") */
+.dw-lens {
+  position: absolute;
+  left: 162px;
+  top: 8px;
+  width: 30px;
+  height: 64px;
+  border-radius: 15px;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.016) 50%, rgba(255, 255, 255, 0.04) 100%),
+    rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(2.5px);
+  backdrop-filter: blur(2.5px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08), inset 0 1.5px 1px rgba(255, 255, 255, 0.7);
+}
+
+/* 1px gradient stroke */
+.dw-lens::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+/* Ticks seen through the glass: drawn in ruler coordinates, dimmed by the 32% white fill */
+.dw-lens-ticks {
+  position: absolute;
+  left: -162px;
+  top: -8px;
+  opacity: 0.68;
+  filter: blur(0.4px);
+}
+
+.dw-lens-needle {
+  position: absolute;
+  left: 13.8px;
+  top: 16.8px;
+  width: 2.4px;
+  height: 30.4px;
+  border-radius: 1.2px;
+  background: var(--tick);
+}
+
+.dw-deposit-label {
+  position: absolute;
+  left: calc(50% - 33px);
+  top: 436.63px;
+  font-size: 18px;
+  line-height: 1.32;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* CTA ------------------------------------------------------------------- */
+.dw-cta {
+  position: absolute;
+  left: 50%;
+  top: 485.63px;
+  width: 354px;
+  height: 61px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px 8px 21px;
+  border-radius: 40.682px;
+  transition: transform 0.2s ease;
+}
+
+.dw-cta:active { transform: translateX(-50%) scale(0.98); }
+
+.dw-cta-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 40.682px;
+  background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(11.95px);
+  backdrop-filter: blur(11.95px);
+  box-shadow: inset 0 0 20px 0 var(--cta-glow);
+  -webkit-mask: url(#dw-cta-mask);
+  mask: url(#dw-cta-mask);
+  transition: background-color 0.25s ease;
+}
+
+.dw-cta:hover .dw-cta-bg { background-color: rgba(0, 0, 0, 0.82); }
+
+.dw-cta-text {
+  position: relative;
+  font-size: 14px;
+  line-height: 1.15;
+  letter-spacing: 0.14px;
+  color: var(--cta-text);
+  white-space: nowrap;
+}
+
+.dw-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dw-chip-pill, .dw-chip, .dw-cta, .dw-cta-bg { transition: none; }
+}
+
+/* Touch circle replaces the native pointer inside the widget. */
+.dw.has-touch-cursor,
+.dw.has-touch-cursor * { cursor: none !important; }
+
+.dw-touch-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.dw-touch-circle.is-visible { opacity: 1; }
+.dw-touch-circle::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 120ms ease, background 120ms ease;
+}
+.dw-touch-circle.is-pressed::before {
+  transform: scale(0.8);
+  background: rgba(255, 255, 255, 0.6);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dw-touch-circle, .dw-touch-circle::before { transition: none; }
+}

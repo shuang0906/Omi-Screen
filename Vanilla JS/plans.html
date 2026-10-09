@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intent Plans</title>
+<link rel="stylesheet" href="./assets/css/plans.css">
+</head>
+
+<body>
+<!-- Intent Plans: dial carousel from Figma "MegaETH (Internal)" node 3740:13094 (Earn, Plans · Option 01).
+     Cards sit on a wheel; rotating the dial turns the wheel. Cards loop infinitely.
+     Items are rendered from the PLANS array in assets/js/plans.js. -->
+<main class="plans">
+  <header class="plans-head" style="display:none;">
+    <h1 class="plans-title">Intent Plans</h1>
+    <a class="plans-link" href="#">See all<img src="./assets/img/plans/chevron.svg" width="14" height="14" alt=""></a>
+  </header>
+
+  <section class="plans-stage" aria-roledescription="carousel" aria-label="Intent plans">
+    <div class="plans-wheel" data-plans="wheel"></div>
+
+    <div class="dial" data-plans="dial" role="slider" tabindex="0" aria-label="Turn the dial to change plan" aria-valuemin="1">
+      <img class="dial-disc" src="./assets/img/plans/dial-disc.svg" width="581.717" height="581.717" alt="">
+      <svg class="dial-ticks" data-plans="ticks" width="539.26" height="539.26" viewBox="0 0 539.26 539.26" fill="none" aria-hidden="true"></svg>
+    </div>
+
+    <button style="display:none;" class="add-plan" type="button">
+      <span class="add-plan-icon">+</span>
+      Add Plan
+    </button>
+  </section>
+</main>
+<div class="sr-only" aria-live="polite" data-announcement></div>
+
+<script src="./assets/js/plans.js"></script>
+</body>
+
+</html>

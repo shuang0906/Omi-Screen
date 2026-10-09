@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glass Cards</title>
+<link rel="stylesheet" href="./assets/css/glass-cards.css">
+</head>
+
+<body>
+<!-- Glass Cards: offer cards from Figma "MegaETH (Internal)" node 3580:29458.
+     Each card is a Figma GLASS frame; refraction is generated in assets/js/glass-cards.js. -->
+<main class="cards">
+
+  <article class="card card--anthurium">
+    <div class="card-tint"></div>
+    <div class="card-body">
+      <span class="card-pill"><img src="./assets/img/glass-cards/schedule.svg" width="17.6692" height="17.6692" alt="">2 days</span>
+      <div class="card-text">
+        <p class="card-brand">Starbucks</p>
+        <p class="card-offer">20% Boost</p>
+      </div>
+    </div>
+    <img class="card-img" src="./assets/img/glass-cards/anthurium.png" alt="">
+  </article>
+
+  <article class="card card--matcha">
+    <div class="card-tint"></div>
+    <div class="card-body">
+      <span class="card-pill"><img src="./assets/img/glass-cards/schedule.svg" width="17.6692" height="17.6692" alt="">2 days</span>
+      <div class="card-text">
+        <p class="card-brand">Starbucks</p>
+        <p class="card-offer">20% Boost</p>
+      </div>
+    </div>
+    <div class="card-img"><img src="./assets/img/glass-cards/matcha.png" alt=""></div>
+  </article>
+
+  <article class="card card--dropper">
+    <div class="card-tint"></div>
+    <img class="card-img" src="./assets/img/glass-cards/dropper.png" alt="">
+    <div class="card-body">
+      <span class="card-pill"><img src="./assets/img/glass-cards/schedule.svg" width="17.6692" height="17.6692" alt="">2 days</span>
+      <div class="card-text">
+        <p class="card-brand">Spencer’s</p>
+        <p class="card-offer">20% Boost</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="card card--cocktail">
+    <div class="card-tint"></div>
+    <img class="card-img" src="./assets/img/glass-cards/cocktail.png" alt="">
+    <div class="card-body">
+      <span class="card-pill"><img src="./assets/img/glass-cards/schedule.svg" width="17.6692" height="17.6692" alt="">2 days</span>
+      <div class="card-text">
+        <p class="card-brand">Sip &amp; Guzzle</p>
+        <p class="card-offer">20% Boost</p>
+      </div>
+    </div>
+  </article>
+
+</main>
+
+<!-- Refraction filter for Chromium (backdrop-filter: url()). The displacement map is drawn by JS. -->
+<svg class="sr-only" aria-hidden="true" width="0" height="0">
+  <filter id="glass-refract" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse">
+    <feImage data-glass="map" x="0" y="0" result="map" preserveAspectRatio="none"/>
+    <feDisplacementMap data-glass="r" in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" result="dr"/>
+    <feDisplacementMap data-glass="g" in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" result="dg"/>
+    <feDisplacementMap data-glass="b" in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" result="db"/>
+    <feColorMatrix in="dr" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cr"/>
+    <feColorMatrix in="dg" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cg"/>
+    <feColorMatrix in="db" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="cb"/>
+    <feBlend in="cr" in2="cg" mode="screen" result="rg"/>
+    <feBlend in="rg" in2="cb" mode="screen" result="rgb"/>
+    <feGaussianBlur in="rgb" data-glass="blur"/>
+  </filter>
+</svg>
+
+<script src="./assets/js/glass-cards.js"></script>
+</body>
+
+</html>

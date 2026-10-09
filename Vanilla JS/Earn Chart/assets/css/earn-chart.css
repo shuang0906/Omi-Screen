@@ -1,0 +1,589 @@
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("../fonts/SuisseIntl-Book.otf") format("opentype");
+  font-weight: 450;
+  font-style: normal;
+  font-display: swap;
+  /* Figma lays text out on the hhea metrics; browsers use the OS/2 typo ones (USE_TYPO_METRICS). */
+  ascent-override: 98.6%;
+  descent-override: 31.1%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --canvas: #bababa;
+  --screen: #f4f4f4;
+  --black: #0e0e0e;
+  --dark-gray: #575757;
+  --secondary: #909090;
+  --dark-green: #135519;
+  --bar: #999;
+  --bar-current: #9fe4a6;
+  --sheet: rgba(255, 255, 255, 0.65);
+  --font: "Suisse Intl", "Suisse Int'l", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-ui: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  background: var(--canvas);
+  font-family: var(--font);
+  font-weight: 450;
+  font-feature-settings: "salt" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+p, h1, h2 { margin: 0; font: inherit; }
+
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img { display: block; max-width: none; }
+
+/* ---------- Screen ---------- */
+
+.ec {
+  position: relative;
+  flex: none;
+  width: 402px;
+  height: 874px;
+  overflow: hidden;
+  border-radius: 32px;
+  background: var(--screen);
+  color: var(--black);
+}
+
+.ec-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 402px;
+  height: 894.175px;
+  overflow: hidden;
+  opacity: 0.4;
+  border-radius: 0 0 26px 26px;
+  background: #efefcf;
+}
+
+.ec-bg-texture,
+.ec-bg-texture-2 {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: color-burn;
+}
+
+.ec-bg-texture { object-fit: cover; }
+
+.ec-bg-texture-2 { overflow: hidden; }
+
+/* Figma places this fill flipped on both axes. */
+.ec-bg-texture-2 img {
+  position: absolute;
+  top: 0;
+  left: -18.73%;
+  width: 137.46%;
+  height: 100%;
+  transform: rotate(180deg);
+}
+
+.ec-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(244, 244, 244, 0) 50%, #f4f4f4 100%);
+}
+
+/* ---------- Underlying Earn screen ---------- */
+
+.ec-head {
+  position: absolute;
+  top: 68.5px;
+  left: 16px;
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.ec-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ec-title {
+  font-size: 36px;
+  line-height: 1.32;
+}
+
+.ec-icon-btn {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.ec-icon-btn img { width: 16.05px; height: 16.05px; }
+
+.ec-greeting {
+  font-size: 20px;
+  line-height: 1.32;
+  letter-spacing: -0.4px;
+}
+
+.ec-greeting span { color: rgba(5, 5, 5, 0.31); }
+
+.ec-balance-label {
+  position: absolute;
+  top: 558.91px;
+  left: 16px;
+  width: 370px;
+  font-size: 20px;
+  line-height: 1.32;
+  color: rgba(14, 14, 14, 0.3);
+}
+
+.ec-balance {
+  position: absolute;
+  top: 588.91px;
+  left: 16px;
+  width: 190px;
+  font-size: 36px;
+  line-height: 1.32;
+}
+
+.ec-actions {
+  position: absolute;
+  top: 695px;
+  left: 18.5px;
+  width: 370px;
+  height: 86.624px;
+  display: flex;
+  gap: 9.554px;
+}
+
+.ec-action {
+  flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 11.25px;
+  padding: 21.92px 0 18.788px;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 13.427px;
+  line-height: 1.3;
+  letter-spacing: 0.2685px;
+  color: var(--secondary);
+}
+
+/* ---------- Chart sheet ---------- */
+
+.ec-sheet {
+  position: absolute;
+  top: 59px;
+  left: 13.5px;
+  width: 375px;
+  height: 737px;
+  border-radius: 16px;
+  background: var(--sheet);
+  -webkit-backdrop-filter: blur(25.8px);
+  backdrop-filter: blur(25.8px);
+}
+
+.ec-blended {
+  position: absolute;
+  top: 11px;
+  left: 16px;
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.24px;
+  color: var(--dark-gray);
+  white-space: nowrap;
+}
+
+.ec-info {
+  position: absolute;
+  top: 9px;
+  left: 343px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+}
+
+.ec-info:active { transform: scale(0.9); }
+
+/* NumberFlow fades digits at its edges; keep the mask small at this size */
+.ec-apy number-flow { --number-flow-mask-height: 0.15em; }
+
+.ec-apy {
+  position: absolute;
+  top: 89px;
+  left: 83.18px;
+  transform: translateX(-50%);
+  font-size: 36px;
+  line-height: 1.32;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.ec-earned {
+  position: absolute;
+  top: 137px;
+  left: 16px;
+  width: 216px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.24px;
+  color: var(--dark-green);
+}
+
+.ec-earned span { flex: 1 0 0; min-width: 1px; }
+
+.ec-chart {
+  position: absolute;
+  top: 175.78px;
+  left: 16px;
+  width: 344.061px;
+  display: flex;
+  flex-direction: column;
+  gap: 8.143px;
+}
+
+.ec-chips {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8.143px;
+}
+
+.ec-chip {
+  border: 0;
+  background: transparent;
+  padding: 4.072px 8.143px;
+  border-radius: 101.793px;
+  font-size: 12.215px;
+  line-height: 1.3;
+  letter-spacing: 0.2443px;
+  color: var(--dark-gray);
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ec-chip[aria-checked="true"] {
+  background: rgba(189, 189, 189, 0.2);
+  color: var(--black);
+}
+
+.ec-chip:focus-visible,
+.ec-bars:focus-visible { outline: 2px solid rgba(53, 158, 63, 0.5); outline-offset: 2px; }
+
+.ec-graph {
+  z-index: 1;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  gap: 8.143px;
+}
+
+.ec-bars {
+  position: relative;
+  z-index: 1;
+  flex: 1 0 0;
+  min-width: 1px;
+  height: 198.497px;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+/* left / width are snapped to device pixels in earn-chart.js so every bar renders equally thick. */
+.ec-bar {
+  position: absolute;
+  bottom: 0;
+  left: calc(4px + var(--i) * 5.963px);
+  width: 1.4px;
+  border-radius: 0.7px;
+  background: var(--bar);
+  transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0ms), background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.ec-bar.is-active { background: var(--bar-current); opacity: 1 !important; }
+
+.ec-yaxis {
+  flex: none;
+  width: 39.699px;
+  height: 198.497px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 10.179px;
+  line-height: 1.3;
+  text-align: right;
+  color: var(--dark-gray);
+}
+
+/* Marker origin = top-centre of the selected bar (graph coordinates).
+   --ec-x / --ec-y are registered so they animate, keeping the dash height in step with the move. */
+@property --ec-x { syntax: "<length>"; inherits: true; initial-value: 290.92px; }
+@property --ec-y { syntax: "<length>"; inherits: true; initial-value: 47.84px; }
+
+.ec-marker {
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  transform: translate(var(--ec-x), var(--ec-y));
+  transition: --ec-x 0.18s ease, --ec-y 0.18s ease;
+}
+
+.ec-marker > * { position: absolute; }
+
+.ec-heat--outer { left: -70px; top: -70px; width: 140px; height: 140px; }
+.ec-heat--mid   { left: -41px; top: -41px; width: 82px;  height: 82px; }
+.ec-heat--core  { left: -20px; top: -20px; width: 40px;  height: 40px; }
+.ec-dot         { left: -5px;  top: -5px;  width: 10px;  height: 10px; }
+.ec-guide       { left: 6px;   top: 0;     width: 4px;   height: 1px; }
+
+/* Dashed drop from the top of the plot to the hovered bar (stops short of the dot). */
+.ec-dash {
+  left: -0.5px;
+  top: calc(var(--ec-y) * -1);
+  width: 1px;
+  height: max(0px, calc(var(--ec-y) - 7px));
+  background: repeating-linear-gradient(180deg, rgba(53, 158, 63, 0.6) 0 2px, transparent 2px 4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ec-marker.is-hover .ec-dash { opacity: 1; }
+
+.ec-tag {
+  left: 10.84px;
+  top: -8px;
+  display: flex;
+  padding: 2px 6px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 1000px;
+  background: rgba(255, 255, 255, 0.65);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 10px;
+  line-height: normal;
+  color: #237a2c;
+  white-space: nowrap;
+}
+
+.ec-xaxis {
+  width: 296.218px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24.43px;
+  font-size: 10.179px;
+  line-height: 1.3;
+  color: #000;
+  white-space: nowrap;
+}
+
+.ec-xaxis span:first-child { color: var(--black); }
+
+.ec-details {
+  position: absolute;
+  top: 443px;
+  left: 14px;
+  width: 346px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 16px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.ec-row {
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.ec-row span:first-child { color: var(--dark-gray); }
+.ec-row span:last-child { color: var(--black); text-align: right; }
+
+.ec-divider { width: 314px; height: 1px; margin: -0.5px 0; }
+
+.ec-how {
+  position: absolute;
+  top: 614.3px;
+  left: 18.5px;
+  width: 338px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(14, 14, 14, 0.15);
+  line-height: 1.25;
+}
+
+.ec-how h2 { font-size: 16px; color: var(--black); }
+.ec-how p { font-size: 12px; color: var(--dark-gray); }
+
+/* ---------- Close ---------- */
+
+.ec-close {
+  position: absolute;
+  top: 804px;
+  left: 170.68px;
+  width: 59.961px;
+  height: 58.295px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11.659px 0 9.993px;
+  border-radius: 15px;
+  background: rgba(124, 124, 124, 0.13);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.ec-close img { width: 14.99px; height: 14.99px; }
+
+.ec-action,
+.ec-icon-btn { transition: transform 0.15s ease; }
+
+.ec-close:active,
+.ec-action:active,
+.ec-icon-btn:active { transform: scale(0.96); }
+
+.ec-close:hover { background: rgba(124, 124, 124, 0.2); }
+
+/* ---------- Status bar (scaled native instance) ---------- */
+
+.ec-status {
+  position: absolute;
+  top: 11.23px;
+  left: 9px;
+  width: 383.04px;
+  height: 42.346px;
+  pointer-events: none;
+}
+
+.ec-status > * { position: absolute; }
+
+.ec-time {
+  left: 28.87px;
+  top: 15.39px;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 15.4px;
+  line-height: 15.399px;
+  color: var(--black);
+  white-space: nowrap;
+}
+
+.ec-signal      { right: 66.41px; top: 19.73px; width: 17.323px; height: 9.624px; }
+.ec-wifi        { right: 46.9px;  top: 18.29px; width: 14.698px; height: 10.554px; }
+.ec-batt-frame  { right: 17.32px; top: 17.33px; width: 24.06px;  height: 12.511px; }
+.ec-batt-cap    { right: 15.42px; top: 22.14px; width: 1.278px;  height: 3.85px; }
+.ec-batt-level  { right: 19.73px; top: 19.57px; width: 19.441px; height: 8.017px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ec-bar, .ec-marker { transition: none; }
+}
+
+/* Press heatmap stays inside the plot and leaves pointer input to the bars. */
+.ec-press-heatmap {
+  position: absolute;
+  z-index: -1;
+  filter: blur(5px);
+  top: 0;
+  left: 0;
+  width: calc(100% - 47.842px);
+  height: 198.497px;
+  pointer-events: none;
+  border-radius: 4px;
+}
+
+/* Touch circle replaces the native pointer inside the widget. */
+.ec.has-touch-cursor,
+.ec.has-touch-cursor * { cursor: none !important; }
+
+.ec-touch-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.ec-touch-circle.is-visible { opacity: 1; }
+.ec-touch-circle::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 120ms ease, background 120ms ease;
+}
+.ec-touch-circle.is-pressed::before {
+  transform: scale(0.8);
+  background: rgba(255, 255, 255, 0.6);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ec-touch-circle, .ec-touch-circle::before { transition: none; }
+}
+
+/* Slow, alternating texture drift keeps the background gradient flowing. */
+.ec-bg-texture {
+  animation: ec-bg-drift 12s ease-in-out infinite alternate;
+}
+.ec-bg-texture-2 {
+  animation: ec-bg-drift-secondary 12s ease-in-out infinite alternate;
+}
+@keyframes ec-bg-drift {
+  0% { transform: translate3d(-12px, -18px, 0) scale(1.14); }
+  50% { transform: translate3d(14px, 8px, 0) scale(1.18); }
+  100% { transform: translate3d(-6px, 24px, 0) scale(1.14); }
+}
+@keyframes ec-bg-drift-secondary {
+  0% { transform: translate3d(14px, 20px, 0) scale(1.16); }
+  50% { transform: translate3d(-16px, -6px, 0) scale(1.2); }
+  100% { transform: translate3d(10px, -24px, 0) scale(1.16); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ec-bg-texture, .ec-bg-texture-2 { animation: none; }
+}

@@ -1,0 +1,262 @@
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("../SuisseIntl-Book.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --page: #fff;
+  --white: #f4f4f4;
+  /* Container "Family" 384 × 487 */
+  --box-w: 384px;
+  --box-h: 487px;
+  --box-r: 19.928px;
+  /* Card 259.064 × 345.75 */
+  --card-w: 259.064px;
+  --card-h: 345.75px;
+  --card-r: 21.921px;
+  --card-top: 40px;
+  /* Figma GLASS: blur 3.99, light -45deg */
+  --glass-blur: 3.99px;
+  --glass-rim: 1.42px;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--page);
+  color: var(--white);
+  font-family: "Suisse Intl", "Suisse Int'l", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.gslider {
+  position: relative;
+  flex: none;
+  width: var(--box-w);
+  height: var(--box-h);
+  border-radius: var(--box-r);
+  overflow: hidden;
+  /* Colours are set per frame by JS from the photo of the card in view */
+  background: linear-gradient(to bottom, var(--bg-top, #33668a) -11.026%, var(--bg-bottom, #909cae) 88.372%), #fff;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  outline: none;
+}
+.gslider.is-dragging { cursor: grabbing; }
+.gslider-track { position: absolute; inset: 0; }
+.gslider-item {
+  position: absolute;
+  top: var(--card-top);
+  left: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+  will-change: transform;
+}
+
+/* Card — scale, blur, opacity and the frost/photo crossfade are set per frame by JS.
+   Centred it shows the photo; as a neighbour it becomes the Figma "Card Stack 55" ghost:
+   white 40%, blurred, 61% opacity, 214.284 × 285.712. */
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--card-r);
+  overflow: hidden;
+  isolation: isolate;
+  background: transparent;
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  will-change: transform, filter, opacity;
+}
+.glass-refract .card { backdrop-filter: url(#glass-refract); }
+/* Specular rim: light from top-left (-45deg) */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  padding: var(--glass-rim);
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, .8) 0%,
+    rgba(255, 255, 255, .2) 6%,
+    rgba(255, 255, 255, .03) 14%,
+    rgba(255, 255, 255, .03) 86%,
+    rgba(255, 255, 255, .15) 94%,
+    rgba(255, 255, 255, .45) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: var(--rim, 1);
+  pointer-events: none;
+}
+.gcard-frost {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: rgba(255, 255, 255, .4);
+  opacity: var(--frost, 0);
+  pointer-events: none;
+}
+/* Photo: Figma box 269.028 × 403.541 at (-2.51, -17.27); object-position carries the parallax */
+.gcard-img {
+  position: absolute;
+  top: -17.27px;
+  left: -2.51px;
+  width: 269.028px;
+  height: 403.541px;
+  max-width: none;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  opacity: var(--photo, 1);
+}
+/* Photo tint from Figma node 3754:21698: #d5d1bd multiplied over the photo, solid down to
+   40.367% of the card height, fading out at the bottom. Fades with the photo. */
+.gcard-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to bottom, #d5d1bd 40.367%, rgba(213, 209, 189, 0));
+  mix-blend-mode: multiply;
+  opacity: var(--photo, 1);
+  pointer-events: none;
+}
+.gcard-body {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: var(--photo, 1);
+}
+.gcard-body p { margin: 0; }
+.gcard-head {
+  position: absolute;
+  top: 15.78px;
+  left: 21.07px;
+  width: 103.883px;
+  line-height: 1.3;
+}
+.gcard-name {
+  width: 1000px;
+  color: #fff;
+  font-size: 22.794px;
+  letter-spacing: -.2279px;
+}
+.gcard-meta {
+  color: rgba(255, 255, 255, .8);
+  font-size: 11.509px;
+}
+.gcard-amounts {
+  position: absolute;
+  top: 236px;
+  left: 15.68px;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.gcard-amount {
+  color: #fff;
+  font-size: 31.79px;
+  letter-spacing: -.3179px;
+}
+.gcard-amount number-flow {
+  /* NumberFlow fades digits at its edges; keep the mask small at this size */
+  --number-flow-mask-height: .2em;
+}
+.gcard-progress {
+  color: rgba(255, 255, 255, .76);
+  font-size: 11.509px;
+}
+/* Funding ticks: 37 × 2px bars across 229px, filled ones taper into the empty ones (24 → 20 → 16 → 12px) */
+.gcard-ticks {
+  position: absolute;
+  top: 303px;
+  left: 15.72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 229px;
+  height: 24px;
+  overflow: hidden;
+}
+.gcard-ticks i {
+  flex: none;
+  width: 2px;
+  height: 24px;
+  border-radius: 1px;
+  background: var(--white);
+  /* Empty tick: 12px at 25%. Scaled from 24px so the animation stays on the compositor. */
+  transform: scaleY(.5);
+  opacity: .25;
+  /* Per-card duration and bounce come from `anim` in the JS (--tick-dur / --tick-ease) */
+  transition: transform var(--tick-dur, .5s) var(--tick-ease, cubic-bezier(.34, 1.56, .64, 1)), opacity .3s ease-out;
+}
+/* When the card settles in the centre, lit ticks grow in, each after its own delay (--d,
+   set per card by the JS). Leaving the centre resets them at once, ready to replay. */
+.is-live .gcard-ticks i {
+  transition-delay: var(--d, 0ms);
+}
+.is-live .gcard-ticks i.is-full { transform: none; opacity: 1; }
+.is-live .gcard-ticks i.is-head1 { transform: scaleY(.8333); opacity: 1; }
+.is-live .gcard-ticks i.is-head2 { transform: scaleY(.6667); opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gcard-ticks i { transition: none; }
+}
+
+.gslider-add {
+  position: absolute;
+  z-index: 10;
+  top: 410px;
+  left: calc(50% + .3px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 160.308px;
+  padding: 8.147px 25.312px 8.147px 8.437px;
+  border: 0;
+  border-radius: 42.585px;
+  background: rgba(255, 255, 255, .15);
+  color: #fff;
+  font: inherit;
+  font-size: 16.369px;
+  line-height: 1.25;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+.gslider-add-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 37.031px;
+  height: 37.031px;
+  padding: 3.703px;
+  border-radius: 28.514px;
+  background: rgba(255, 255, 255, .29);
+  font-size: 20.696px;
+  line-height: 1.25;
+  font-feature-settings: "case" 1;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

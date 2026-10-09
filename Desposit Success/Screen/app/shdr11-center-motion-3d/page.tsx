@@ -1,7 +1,8 @@
 "use client"
 import { useEffect, useRef, useState } from "react"
+import { CanvasRecorder } from "@/components/canvas-recorder"
 import { Shdr11 } from "@/components/ui/shdr-11"
-import { Shdr11LogoCenterMotion } from "@/components/ui/shdr11-logo-center-motion"
+import { Shdr11LogoCenterMotion3D } from "@/components/ui/shdr11-logo-center-motion-3d"
 import "../shdr21-center/orb-version.css"
 import "../shdr21-center/glow-center.css"
 const clamp = (x: number) => Math.max(0, Math.min(1, x))
@@ -24,6 +25,7 @@ export default function Page() {
   })
   const [motionSpeed, setMotionSpeed] = useState(1.5)
   const [motionStrength, setMotionStrength] = useState(1)
+  const [recording, setRecording] = useState(false)
   const [paused, setPaused] = useState(false)
   const [phase, setPhase] = useState<"idle" | "entering" | "ready">("idle")
   const [debugGreen, setDebugGreen] = useState(false)
@@ -205,7 +207,7 @@ export default function Page() {
             <div className="glow-center" ref={glowRef}>
               <div className="orb-shape">
               {shape === "logo" ? (
-                <Shdr11LogoCenterMotion motionSpeed={motionSpeed} motionStrength={motionStrength} debugGreen={debugGreen} paused={paused || phase === "idle"} transparent canvasPadding={1.4} style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%, -50%)",width:"140%",height:"140%"}} />
+                <Shdr11LogoCenterMotion3D motionSpeed={motionSpeed} motionStrength={motionStrength} debugGreen={debugGreen} paused={paused || phase === "idle"} transparent canvasPadding={1.4} style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%, -50%)",width:"140%",height:"140%"}} />
               ) : (
               <Shdr11
                 size={280}
@@ -233,8 +235,10 @@ export default function Page() {
         </div>
       </main>
       <div className="controls">
+        <CanvasRecorder containerRef={glowRef} filename="shdr11-center-motion-3d" beforeStart={jumpToCenter} onRecordingChange={setRecording} />
         <a href="/shdr21-center-motion">SHDR-21 center motion</a>
-        <span>SHDR-11 · Hydrogen</span>
+        <span>SHDR-11 · Motion 3D</span>
+        <a href="/shdr11-center-motion">平面版本</a>
         <label>形变速度 <input aria-label="形变速度" type="range" min="0" max="3" step="0.05" value={motionSpeed} onChange={e=>setMotionSpeed(Number(e.target.value))} /><output>{motionSpeed.toFixed(2)}×</output></label>
         <label>形变强度 <input aria-label="形变强度" type="range" min="0" max="3" step="0.05" value={motionStrength} onChange={e=>setMotionStrength(Number(e.target.value))} /><output>{motionStrength.toFixed(2)}×</output></label>
         <label><input type="checkbox" role="switch" checked={debugGreen} onChange={e=>setDebugGreen(e.target.checked)} /> Green 背景</label>
@@ -259,7 +263,7 @@ export default function Page() {
           <output htmlFor="ease-strength" style={{display:"inline-block",minWidth:28,marginLeft:6,fontVariantNumeric:"tabular-nums"}}>{easeStrength.toFixed(1)}</output>
         </label>
         <label>Shape{" "}
-          <select value={shape} onChange={(e) => setShape(e.target.value as "sphere" | "logo")}>
+          <select disabled={recording} value={shape} onChange={(e) => setShape(e.target.value as "sphere" | "logo")}>
             <option value="sphere">球形</option>
             <option value="logo">Omi Logo</option>
           </select>

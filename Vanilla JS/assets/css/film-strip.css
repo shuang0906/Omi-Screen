@@ -1,0 +1,111 @@
+:root {
+  --bg: #171915;
+  --fg: #eeeade;
+  --gap: 22px;
+  --frame-h: 347px;
+  --frame-w: 260px;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.roll {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 370px;
+  height: 417px;
+  background: #eeeeee;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  border-radius: 20px;
+}
+.roll.is-dragging { cursor: grabbing; }
+.roll:focus { outline: none; }
+.roll-track { position: absolute; inset: 0; }
+.roll-item {
+  position: absolute;
+  top: calc((100% - var(--frame-h)) / 2);
+  left: 0;
+  width: var(--frame-w);
+  height: var(--frame-h);
+  will-change: transform;
+}
+.roll-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #333;
+  will-change: transform;
+}
+.roll-img {
+  position: absolute;
+  left: -40%;
+  top: 0;
+  width: 180%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(.65);
+  pointer-events: none;
+  will-change: transform;
+}
+.roll-img svg { width: 100%; height: 100%; display: block; }
+.roll-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,#0009,transparent 75%),linear-gradient(0deg,#000b,transparent 65%);
+  pointer-events: none;
+}
+.roll-content {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  padding: 22px 18px;
+  will-change: transform;
+}
+.roll-col { width: min(750px, 100%); }
+.roll-content [data-parallax] { will-change: transform; }
+.roll-eyebrow {
+  margin-bottom: 12px;
+  font-size: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.roll-title {
+  margin: 0 0 22px;
+  font-size: 38px;
+  font-weight: 400;
+  line-height: .88;
+  letter-spacing: -.065em;
+}
+.roll-specs {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 7px;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+}
+.roll-specs li { display: flex; flex-direction: column; gap: 9px; }
+.roll-specs li span:first-child { color: #d4d3c0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}

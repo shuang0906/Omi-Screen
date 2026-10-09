@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earn Chart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap">
+<link rel="stylesheet" href="./assets/css/earn-chart.css">
+</head>
+<body>
+<!-- Earn Chart: Figma "Untitled" node 520:4492 ("Light Mode — Chart v2"). 402 × 874 screen.
+     Period chips swap the dataset; hover / drag across the chart to read each day's APY (rolled by NumberFlow).
+     Datasets live in assets/js/earn-chart.js. -->
+<main class="ec" data-ec>
+  <div class="ec-bg" aria-hidden="true">
+    <img class="ec-bg-texture" src="./assets/img/bg-texture.png" alt="">
+    <span class="ec-bg-texture-2"><img src="./assets/img/bg-texture-2.png" alt=""></span>
+  </div>
+
+  <!-- Underlying Earn screen, frosted by the sheet above -->
+  <header class="ec-head">
+    <div class="ec-head-row">
+      <h1 class="ec-title">Earn</h1>
+      <button class="ec-icon-btn" type="button" aria-label="Settings">
+        <img src="./assets/img/settings.svg" width="16.0497" height="16.0497" alt="">
+      </button>
+    </div>
+    <p class="ec-greeting">Good morning Daniel, <span>manage<br>your account, security and<br>preferences here.</span></p>
+  </header>
+  <p class="ec-balance-label">Total Balance</p>
+  <p class="ec-balance">$12,453.42</p>
+  <div class="ec-actions">
+    <button class="ec-action" type="button">
+      <img src="./assets/img/add-funds.svg" width="18.7649" height="18.7649" alt="">
+      <span>Add funds</span>
+    </button>
+    <button class="ec-action" type="button">
+      <img src="./assets/img/withdraw.svg" width="22.7655" height="22.7655" alt="">
+      <span>Withdraw</span>
+    </button>
+  </div>
+
+  <!-- Chart sheet -->
+  <section class="ec-sheet" aria-label="Earn APY">
+    <p style="display: none;" class="ec-blended">41.8% Blended APY</p>
+    <button class="ec-info" type="button" aria-label="About Blended APY" title="Weighted APY across your Earn balance">
+      <img src="./assets/img/info.svg" width="24" height="24" alt="">
+    </button>
+
+    <p class="ec-apy" aria-live="polite"><number-flow data-ec="apy">42.50%</number-flow></p>
+    <p class="ec-earned" style="display: none;">
+      <img src="./assets/img/plus-circle.svg" width="16" height="16" alt="">
+      <span data-ec="earned">$1.39 today</span>
+    </p>
+
+    <div class="ec-chart">
+      <div class="ec-chips" role="radiogroup" aria-label="Period" data-ec="chips" style="display: none;">
+        <button class="ec-chip" type="button" role="radio" aria-checked="true" data-period="1W">1W</button>
+        <button class="ec-chip" type="button" role="radio" aria-checked="false" data-period="1M">1M</button>
+        <button class="ec-chip" type="button" role="radio" aria-checked="false" data-period="3M">3M</button>
+        <button class="ec-chip" type="button" role="radio" aria-checked="false" data-period="YTD">YTD</button>
+        <button class="ec-chip" type="button" role="radio" aria-checked="false" data-period="1Y">1Y</button>
+        <button class="ec-chip" type="button" role="radio" aria-checked="false" data-period="5Y">5Y</button>
+        <button class="ec-chip" type="button" role="radio" aria-checked="false" data-period="ALL">ALL</button>
+      </div>
+
+      <div class="ec-graph">
+        <div class="ec-bars" data-ec="bars" role="img" aria-label="APY history" ></div>
+        <div class="ec-yaxis" aria-hidden="true" style="display: none;"><p>45%</p><p>40%</p><p>35%</p></div>
+        <div class="ec-marker" data-ec="marker" aria-hidden="true">
+          <span class="ec-dash"></span>
+          <img class="ec-heat ec-heat--outer" src="./assets/img/heat-outer.svg" width="140" height="140" alt="">
+          <img class="ec-heat ec-heat--core" src="./assets/img/heat-core.svg" width="40" height="40" alt="">
+          <img class="ec-dot" src="./assets/img/current-dot.svg" width="10" height="10" alt="">
+          <img class="ec-guide" src="./assets/img/current-guide.svg" width="4" height="1" alt="">
+          <span class="ec-tag"><span data-ec="tag">42.5%</span></span>
+        </div>
+      </div>
+
+      <div class="ec-xaxis" data-ec="xaxis" aria-hidden="true"></div>
+    </div>
+
+    <div class="ec-details" style="display: none;">
+      <div class="ec-row"><span>30-day Average&nbsp; APY</span><span>41.80%</span></div>
+      <img class="ec-divider" src="./assets/img/divider.svg" width="314" height="1" alt="">
+      <div class="ec-row"><span>FX Risk</span><span>Fully Hedged</span></div>
+      <img class="ec-divider" src="./assets/img/divider.svg" width="314" height="1" alt="">
+      <div class="ec-row"><span>Yield Payout</span><span>Daily</span></div>
+      <img class="ec-divider" src="./assets/img/divider.svg" width="314" height="1" alt="">
+      <div class="ec-row"><span>Current Central Bank Rate</span><span>50.00%</span></div>
+    </div>
+
+    <div class="ec-how" style="display: none;">
+      <h2>How it works</h2>
+      <p>This strategy captures the high interest rates set by the Turkish Central Bank. We automatically convert your funds, generate yield, and fully hedge against currency fluctuations so your principal is protected.</p>
+    </div>
+  </section>
+
+  <button class="ec-close" type="button" aria-label="Close">
+    <img src="./assets/img/close.svg" width="14.9902" height="14.9902" alt="">
+  </button>
+
+  <div class="ec-status" aria-hidden="true" style="display: none;">
+    <span class="ec-time">9:41</span>
+    <img class="ec-signal" src="./assets/img/signal.svg" width="17.3234" height="9.62413" alt="">
+    <img class="ec-wifi" src="./assets/img/wifi.svg" width="14.6983" height="10.5535" alt="">
+    <img class="ec-batt-frame" src="./assets/img/battery-frame.svg" width="25" height="13" alt="">
+    <img class="ec-batt-cap" src="./assets/img/battery-cap.svg" width="1.32804" height="4" alt="">
+    <img class="ec-batt-level" src="./assets/img/battery-level.svg" width="20.2" height="8.33" alt="">
+  </div>
+</main>
+<!-- NumberFlow (https://number-flow.barvian.me) for the rolling APY -->
+<script type="module">
+  import 'https://esm.sh/number-flow@0.6.2';
+  import { continuous } from 'https://esm.sh/number-flow@0.6.2/plugins';
+  window.NumberFlowPlugins = { continuous };
+  window.dispatchEvent(new Event('numberflow-ready'));
+</script>
+<script src="./assets/js/earn-chart.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Film Strip Slider</title>
+<link rel="stylesheet" href="./assets/css/film-strip.css">
+</head>
+
+<body>
+<!-- Film Strip Slider: an infinite horizontal film roll driven by wheel / drag / touch / keys.
+     Items are rendered from the SLIDES array in assets/js/film-strip.js. -->
+<main class="roll" data-roll aria-label="Horizontal infinite film archive. Use left and right arrow keys to change slides." tabindex="0">
+  <div class="roll-track" data-roll="track"></div>
+
+</main>
+<div class="sr-only" aria-live="polite" data-announcement></div>
+
+<script src="./assets/js/film-strip.js"></script>
+</body>
+
+</html>

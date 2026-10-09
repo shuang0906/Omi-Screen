@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glass Cards Slider v2</title>
+<link rel="stylesheet" href="./assets/css/glass-cards-slider-v2.css">
+</head>
+<body>
+<!-- Glass Cards Slider v2: card design and container from Figma "MegaETH (Internal)" node 3800:29024 ("Family").
+     Infinite horizontal slider (wheel / drag / touch / keys). Neighbouring cards turn into the frosted
+     ghost cards from the design. Cards are rendered from the PLANS array in assets/js/glass-cards-slider-v2.js. -->
+<main class="gslider" data-gslider aria-label="Intent plans. Use left and right arrow keys to change cards." tabindex="0">
+  <div class="gslider-track" data-gslider="track"></div>
+
+  <button class="gslider-add" type="button" style="display: none;">
+    <span class="gslider-add-icon">+</span>
+    Add Plan
+  </button>
+</main>
+<div class="sr-only" aria-live="polite" data-announcement></div>
+
+<!-- Refraction filter for Chromium (backdrop-filter: url()); the map is drawn by glass-cards.js. -->
+<svg class="sr-only" aria-hidden="true" width="0" height="0">
+  <filter id="glass-refract" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse">
+    <feImage data-glass="map" x="0" y="0" result="map" preserveAspectRatio="none"/>
+    <feDisplacementMap data-glass="r" in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" result="dr"/>
+    <feDisplacementMap data-glass="g" in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" result="dg"/>
+    <feDisplacementMap data-glass="b" in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" result="db"/>
+    <feColorMatrix in="dr" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cr"/>
+    <feColorMatrix in="dg" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cg"/>
+    <feColorMatrix in="db" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="cb"/>
+    <feBlend in="cr" in2="cg" mode="screen" result="rg"/>
+    <feBlend in="rg" in2="cb" mode="screen" result="rgb"/>
+    <feGaussianBlur in="rgb" data-glass="blur"/>
+  </filter>
+</svg>
+<!-- NumberFlow (https://number-flow.barvian.me) for the rolling amounts -->
+<script type="module">
+  import 'https://esm.sh/number-flow@0.6.2';
+  import { continuous } from 'https://esm.sh/number-flow@0.6.2/plugins';
+  window.NumberFlowPlugins = { continuous };
+  window.dispatchEvent(new Event('numberflow-ready'));
+</script>
+<script src="./assets/js/glass-cards-slider-v2.js"></script>
+<script src="./assets/js/glass-cards.js"></script>
+</body>
+</html>

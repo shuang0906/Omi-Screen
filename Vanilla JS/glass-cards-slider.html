@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glass Cards Slider</title>
+<link rel="stylesheet" href="./assets/css/film-strip.css">
+<link rel="stylesheet" href="./assets/css/indicator.css">
+<link rel="stylesheet" href="./assets/css/glass-cards.css">
+<link rel="stylesheet" href="./assets/css/gradient-cards.css">
+<link rel="stylesheet" href="./assets/css/glass-cards-slider.css">
+</head>
+<body>
+<div class="slider-backdrop" aria-hidden="true">
+  <div class="bg bg--yellow slider-background-layer" data-background="0"><div class="bg-fill"></div></div>
+  <div class="bg bg--green slider-background-layer" data-background="1"></div>
+  <div class="bg bg--rose slider-background-layer" data-background="2"></div>
+  <div class="bg bg--orange slider-background-layer" data-background="3"></div>
+</div>
+<div class="slider-window">
+<main class="roll glass-slider" data-roll aria-label="Glass offer cards. Use left and right arrow keys to change cards." tabindex="0">
+  <div class="roll-track" data-roll="track"></div>
+</main>
+<nav class="indicator" data-indicator data-duration="3000" aria-label="Choose a card"></nav>
+</div>
+<div class="slider-background-cover" aria-hidden="true"></div>
+<div class="sr-only" aria-live="polite" data-announcement></div>
+<template id="glass-slide-templates">
+
+
+  <article class="card card--anthurium">
+    <div class="card-tint"></div>
+    <div class="card-body">
+      <span class="card-pill" data-parallax="22"><img src="./assets/img/glass-cards/schedule.svg" width="17.6692" height="17.6692" alt="">2 days</span>
+      <div class="card-text" data-parallax="42">
+        <p class="card-brand">Crate & Barrel</p>
+        <p class="card-offer">20% Boost</p>
+      </div>
+    </div>
+    <img class="card-img" src="./assets/img/glass-cards/anthurium.png" alt="">
+  </article>
+
+  <article class="card card--matcha">
+    <div class="card-tint"></div>
+    <div class="card-body">
+      <span class="card-pill" data-parallax="22"><img src="./assets/img/glass-cards/schedule.svg" width="17.6692" height="17.6692" alt="">2 days</span>
+      <div class="card-text" data-parallax="42">
+        <p class="card-brand">Starbucks</p>
+        <p class="card-offer">20% Boost</p>
+      </div>
+    </div>
+    <div class="card-img"><img src="./assets/img/glass-cards/matcha.png" alt=""></div>
+  </article>
+
+  <article class="card card--dropper">
+    <div class="card-tint"></div>
+    <img class="card-img" src="./assets/img/glass-cards/dropper.png" alt="">
+    <div class="card-body">
+      <span class="card-pill" data-parallax="22"><img src="./assets/img/glass-cards/schedule.svg" width="17.6692" height="17.6692" alt="">2 days</span>
+      <div class="card-text" data-parallax="42">
+        <p class="card-brand">Spencer’s</p>
+        <p class="card-offer">20% Boost</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="card card--cocktail">
+    <div class="card-tint"></div>
+    <img class="card-img" src="./assets/img/glass-cards/cocktail.png" alt="">
+    <div class="card-body">
+      <span class="card-pill" data-parallax="22"><img src="./assets/img/glass-cards/schedule.svg" width="17.6692" height="17.6692" alt="">2 days</span>
+      <div class="card-text" data-parallax="42">
+        <p class="card-brand">Sip &amp; Guzzle</p>
+        <p class="card-offer">20% Boost</p>
+      </div>
+    </div>
+  </article>
+
+</template>
+<svg class="sr-only" aria-hidden="true" width="0" height="0">
+  <filter id="glass-refract" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse">
+    <feImage data-glass="map" x="0" y="0" result="map" preserveAspectRatio="none"/>
+    <feDisplacementMap data-glass="r" in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" result="dr"/>
+    <feDisplacementMap data-glass="g" in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" result="dg"/>
+    <feDisplacementMap data-glass="b" in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" result="db"/>
+    <feColorMatrix in="dr" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cr"/>
+    <feColorMatrix in="dg" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cg"/>
+    <feColorMatrix in="db" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="cb"/>
+    <feBlend in="cr" in2="cg" mode="screen" result="rg"/>
+    <feBlend in="rg" in2="cb" mode="screen" result="rgb"/>
+    <feGaussianBlur in="rgb" data-glass="blur"/>
+  </filter>
+</svg>
+<script src="./assets/js/glass-cards-slider.js"></script>
+<script src="./assets/js/glass-cards.js"></script>
+</body>
+</html>

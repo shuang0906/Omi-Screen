@@ -1,0 +1,200 @@
+:root {
+  --bg: #878787;
+  --white: #f4f4f4;
+  --card-w: 260px;
+  --card-h: 347px;
+  --card-r: 20px;
+  --gap: 18px;
+  /* Figma GLASS effect: blur 4, light angle -45deg, light 80% */
+  --glass-blur: 4px;
+  --glass-rim: 1.43px;
+  --glass-light: rgba(255, 255, 255, .8);
+  --glass-shade: rgba(255, 255, 255, .45);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--white);
+  font-family: "Suisse Int'l", "Suisse Intl", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 40px 16px;
+}
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+}
+
+/* Glass card */
+.card {
+  position: relative;
+  flex: none;
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: var(--card-r);
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--card-fill, transparent);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, .12),
+    inset -1px -1px 2px rgba(255, 255, 255, .06);
+}
+.glass-refract .card {
+  backdrop-filter: url(#glass-refract);
+}
+/* Specular rim: light from top-left (-45deg), weaker bounce at bottom-right */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: var(--glass-rim);
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    var(--glass-light) 0%,
+    rgba(255, 255, 255, .2) 6%,
+    rgba(255, 255, 255, .03) 14%,
+    rgba(255, 255, 255, .03) 86%,
+    rgba(255, 255, 255, .15) 94%,
+    var(--glass-shade) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+.card-tint {
+  position: absolute;
+  left: 50%;
+  width: 230px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.card-body {
+  position: absolute;
+  left: 30px;
+  top: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  width: 117.448px;
+}
+.card-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5.744px;
+  padding: 5.714px 11.487px 5.714px 8.571px;
+  border-radius: 64.286px;
+  background: rgba(244, 244, 244, .2);
+  -webkit-backdrop-filter: blur(5.744px);
+  backdrop-filter: blur(5.744px);
+  font-size: 14px;
+  line-height: 1.15;
+  letter-spacing: .14px;
+  white-space: nowrap;
+  font-feature-settings: "salt" 1;
+}
+.card-pill img { display: block; flex: none; }
+.card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  line-height: 1;
+  overflow-wrap: break-word;
+}
+.card-text p { margin: 0; }
+.card-brand {
+  font-size: 18px;
+  letter-spacing: .18px;
+  color: rgba(255, 255, 255, .7);
+  width:500px;
+}
+.card-offer {
+  font-size: 22px;
+  letter-spacing: .22px;
+  color: #fff;
+}
+.card-img {
+  position: absolute;
+  display: block;
+  max-width: none;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Card Stack 68 */
+.card--anthurium .card-tint {
+  top: 15px;
+  height: 314px;
+  border-radius: 14.286px;
+  background: linear-gradient(to bottom, #95a000, rgba(188, 183, 84, 0) 79.45%);
+}
+.card--anthurium .card-img { left: 40px; top: 25.18px; width: 270px; height: 405px; }
+
+/* Card Stack 70 */
+.card--matcha .card-tint {
+  bottom: 15px;
+  height: 317px;
+  border-radius: 10px;
+  background: linear-gradient(to top, #7a9100, rgba(122, 145, 0, 0) 56.082%);
+}
+.card--matcha .card-body { top: 216px; }
+.card--matcha .card-img {
+  left: -167px;
+  top: -310px;
+  width: 594.272px;
+  height: 525.965px;
+  overflow: hidden;
+}
+.card--matcha .card-img img {
+  position: absolute;
+  left: -.04%;
+  top: 0;
+  width: 100.09%;
+  height: 169.61%;
+  max-width: none;
+}
+
+/* Card Stack 72 */
+.card--dropper .card-tint {
+  bottom: 15px;
+  height: 317px;
+  border-radius: 10px;
+  background: linear-gradient(to top, rgba(219, 202, 210, .5) 8.837%, rgba(78, 46, 51, 0) 88.372%);
+}
+.card--dropper .card-body { top: 216px; }
+.card--dropper .card-img { left: 52px; top: 0; width: 216px; height: 269px; }
+
+/* Card Stack 66 */
+.card--cocktail { --card-fill: rgba(255, 255, 255, .1); }
+.card--cocktail .card-tint {
+  top: 15px;
+  height: 314px;
+  border-radius: 10px;
+  background: linear-gradient(to bottom, #e4560b, rgba(255, 174, 132, 0) 65.385%);
+}
+.card--cocktail .card-img { left: -192.86px; top: 67.14px; width: 479.048px; height: 718.571px; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

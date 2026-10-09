@@ -1,0 +1,248 @@
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("../SuisseIntl-Book.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --page: #e4e4e4;
+  --frame: #fff;
+  --panel: #f4f4f4;
+  --text: #0e0e0e;
+  --card-w: 219.368px;
+  --card-h: 265.773px;
+  --card-r: 10.547px;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--page);
+  color: var(--text);
+  font-family: "Suisse Intl", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* Outer white frame 420 × 554 */
+.plans {
+  position: relative;
+  width: 420px;
+  height: 554px;
+  flex: none;
+  border-radius: 31px;
+  overflow: hidden;
+  background: var(--frame);
+}
+.plans-head {
+  position: absolute;
+  z-index: 5;
+  top: 34px;
+  left: 33.1px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 360px;
+}
+.plans-title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 400;
+  line-height: normal;
+}
+.plans-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.3;
+  text-decoration: none;
+}
+.plans-link img { display: block; }
+
+/* Grey stage 390.223 × 521 */
+.plans-stage {
+  position: absolute;
+  top: 15.38px;
+  left: 14.89px;
+  width: 390.223px;
+  height: 521px;
+  border-radius: 21.093px;
+  overflow: hidden;
+  background: var(--panel);
+}
+.plans-wheel {
+  position: absolute;
+  inset: 0;
+}
+
+/* Card — position, rotation, blur and content fade are set per frame by JS */
+.plan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: var(--card-r);
+  overflow: hidden;
+  background: #fff;
+  will-change: transform, filter;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.plan-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+/* Fade each part separately: opacity on a wrapper would cut the band's backdrop blur off from the photo */
+.plan-content > * { opacity: var(--fade, 1); }
+.plan-head {
+  position: absolute;
+  top: 11.52px;
+  left: 11.22px;
+  width: 98.083px;
+  line-height: 1.3;
+}
+.plan-name {
+  margin: 0;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 400;
+  letter-spacing: -.2152px;
+  width:1000px;
+}
+.plan-meta {
+  margin: 0;
+  color: rgba(255, 255, 255, .76);
+  font-size: 11px;
+}
+/* Extend the frosted band upward by 20%; fade the added area into the original blur. */
+.plan-band {
+  position: absolute;
+  top: 153.386px;
+  left: 0;
+  width: 100%;
+  height: 124.885px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, .3));
+  -webkit-backdrop-filter: blur(12.761px);
+  backdrop-filter: blur(12.761px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 57.239px);
+  mask-image: linear-gradient(to bottom, transparent, #000 57.239px);
+}
+.plan-amount,
+.plan-progress {
+  position: absolute;
+  left: 14.91px;
+  margin: 0;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.plan-amount {
+  top: 200.74px;
+  color: #fff;
+  font-size: 30.015px;
+  letter-spacing: -.3001px;
+}
+.plan-progress {
+  top: 239.76px;
+  color: rgba(255, 255, 255, .76);
+  font-size: 10.866px;
+}
+
+/* Dial — only this area is draggable */
+.dial {
+  position: absolute;
+  z-index: 10;
+  top: 366.38px;
+  left: -96.42px;
+  width: 581.717px;
+  height: 581.717px;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+}
+.dial.is-dragging { cursor: grabbing; }
+.dial-disc {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+/* Ticks centre: Figma box 543.44 at (-71.49, 387.52) on the stage, i.e. offset from the disc box */
+.dial-ticks {
+  position: absolute;
+  top: 23.23px;
+  left: 27.02px;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+  will-change: transform;
+}
+.dial-ticks line { stroke-width: 1.58198; }
+.dial-ticks .tick { stroke: rgba(131, 131, 131, .37); }
+.dial-ticks .tick.is-active { stroke: #383838; }
+
+.add-plan {
+  position: absolute;
+  z-index: 11;
+  top: 448.5px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 160.308px;
+  padding: 8.147px 25.312px 8.147px 8.437px;
+  border: 0;
+  border-radius: 42.585px;
+  background: #fff;
+  color: #000;
+  font: inherit;
+  font-size: 16.369px;
+  line-height: 1.25;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+.add-plan-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 37.031px;
+  height: 37.031px;
+  padding: 3.703px;
+  border-radius: 28.514px;
+  background: rgba(217, 217, 217, .29);
+  color: #afafaf;
+  font-size: 20.696px;
+  line-height: 1.25;
+  font-feature-settings: "case" 1;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

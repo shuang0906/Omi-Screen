@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deposit Widget</title>
+<link rel="stylesheet" href="./assets/css/deposit-widget.css">
+</head>
+<body>
+<!-- Deposit Widget: Figma "Untitled" node 512:7067. 370 × 555 card.
+     Drag / wheel / arrow keys on the ruler to change the deposit; chips switch the yield period.
+     Rate and range are set in assets/js/deposit-widget.js. -->
+<main class="dw" data-dw>
+  <img class="dw-glow" src="./assets/img/glow.svg" width="500" height="270" alt="">
+  <canvas class="dw-orb" data-dw="orb" aria-hidden="true"></canvas>
+
+  <section class="dw-yield">
+    <p class="dw-yield-title">
+      Potential Yield
+      <img class="dw-yield-info" src="./assets/img/info.svg" width="15.4277" height="15.4277" alt="" title="Estimated yield for the selected period">
+    </p>
+    <p class="dw-yield-value" aria-live="polite"><number-flow data-dw="yield">+$750.00</number-flow></p>
+    <div class="dw-chips" role="radiogroup" aria-label="Period" data-dw="chips">
+      <span class="dw-chip-pill" aria-hidden="true"></span>
+      <button class="dw-chip" type="button" role="radio" aria-checked="false" data-months="1">1M</button>
+      <button class="dw-chip" type="button" role="radio" aria-checked="false" data-months="6">6M</button>
+      <button class="dw-chip" type="button" role="radio" aria-checked="true" data-months="12">1Y</button>
+      <button class="dw-chip" type="button" role="radio" aria-checked="false" data-months="36">3Y</button>
+    </div>
+  </section>
+
+  <p class="dw-amount"><number-flow data-dw="amount">$500</number-flow></p>
+
+  <div class="dw-ruler" data-dw="ruler" role="slider" tabindex="0" aria-label="Deposit amount"
+       aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
+    <div class="dw-scale">
+      <div class="dw-ticks" data-dw="ticks"></div>
+      <div class="dw-labels" data-dw="labels"></div>
+    </div>
+    <span class="dw-lens" aria-hidden="true"><span class="dw-ticks dw-lens-ticks" data-dw="lens-ticks"></span><span class="dw-lens-needle"></span></span>
+  </div>
+
+  <p class="dw-deposit-label">Deposit</p>
+
+  <button class="dw-cta" type="button">
+    <span class="dw-cta-bg" aria-hidden="true"></span>
+    <span class="dw-cta-text">Add funds to start</span>
+  </button>
+</main>
+<!-- CTA soft-edge mask (Figma "Fill" mask). Referenced from CSS so it also works when opened via file://,
+     where CSS mask-image files are blocked by CORS. -->
+<svg class="dw-defs" aria-hidden="true" width="0" height="0">
+  <mask id="dw-cta-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="-5" y="-2.631" width="364" height="66" style="mask-type: alpha">
+    <image href="./assets/img/button-mask.svg" x="-5" y="-2.631" width="364" height="66"/>
+  </mask>
+</svg>
+<!-- NumberFlow (https://number-flow.barvian.me) for the rolling amounts -->
+<script type="module">
+  import 'https://esm.sh/number-flow@0.6.2';
+  import { continuous } from 'https://esm.sh/number-flow@0.6.2/plugins';
+  window.NumberFlowPlugins = { continuous };
+  window.dispatchEvent(new Event('numberflow-ready'));
+</script>
+<script src="./assets/js/deposit-widget.js"></script>
+<!-- Liquid Orb (WebGPU) behind the CTA; falls back to the SVG glow -->
+<script src="./assets/js/liquid-orb.js"></script>
+</body>
+</html>

@@ -38,20 +38,18 @@ float logoPlanarDistance(vec2 p){
 }
 
 `
-// Reuse the official shader and noise helpers. Only the coverage mask changes;
-// orbital flow, precession, interference bands and metallic lighting stay SHDR-11.
+// Official Hydrogen flow and lighting, clipped to the animated logo silhouette.
 const helpers = ORB_GLSL_HELPERS
-  .replace(/^uniform .*$/gm, "")
-  .replace(/vec2 orbUV\(\) \{[^}]*\}/, "")
-const parameters = shdr11Orb.params.map(p =>
-  p.integrate
-    ? `#define uP_${p.key} (uTime * ${p.default.toFixed(6)})`
-    : `const float uP_${p.key} = ${p.default.toFixed(6)};`
+ .replace(/^uniform .*$/gm, "")
+ .replace(/vec2 orbUV\(\) \{[^}]*\}/, "")
+const parameters = shdr11Orb.params.map(p => p.integrate
+ ? `#define uP_${p.key} (uTime * ${p.default.toFixed(6)})`
+ : `const float uP_${p.key} = ${p.default.toFixed(6)};`
 ).join("\n")
 const hydrogen = shdr11Orb.frag
-  .replace("vec2 uv = orbUV();", "vec2 uv = (2.0 * gl_FragCoord.xy - uResolution) / min(uResolution.x, uResolution.y) * 1.08 * uCanvasPadding * uP_radius;")
-  .replace("float mask = smoothstep(0.012, -0.012, r2d - R);", "float distanceToLogo = logoPlanarDistance(uv / R) + uNarrowing; float mask = 1.0 - smoothstep(-0.14, 0.14, distanceToLogo); if(mask <= 0.0){ gl_FragColor = vec4(mix(vec3(1.0), vec3(0.0,1.0,0.0), uDebugGreen) * (1.0-uTransparent), 1.0-uTransparent); return; }")
-  .replace("gl_FragColor = vec4(surfaceColor * a, a);", "vec3 background = mix(vec3(1.0), vec3(0.0,1.0,0.0), uDebugGreen); gl_FragColor = vec4(surfaceColor * a + background * (1.0-a) * (1.0-uTransparent), mix(1.0,a,uTransparent));")
+ .replace("vec2 uv = orbUV();", "vec2 uv = (2.0 * gl_FragCoord.xy - uResolution) / min(uResolution.x, uResolution.y) * 1.08 * uCanvasPadding * uP_radius;")
+ .replace("float mask = smoothstep(0.012, -0.012, r2d - R);", "float distanceToLogo = logoPlanarDistance(uv / R) + uNarrowing; float mask = 1.0 - smoothstep(-0.14, 0.14, distanceToLogo); if(mask <= 0.0){ gl_FragColor = vec4(mix(vec3(1.0), vec3(0.0,1.0,0.0), uDebugGreen) * (1.0-uTransparent), 1.0-uTransparent); return; }")
+ .replace("gl_FragColor = vec4(surfaceColor * a, a);", "vec3 background = mix(vec3(1.0), vec3(0.0,1.0,0.0), uDebugGreen); gl_FragColor = vec4(surfaceColor * a + background * (1.0-a) * (1.0-uTransparent), mix(1.0,a,uTransparent));")
 const fragmentSource = `
 precision highp float;
 uniform vec2 uResolution;
