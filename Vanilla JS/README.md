@@ -62,13 +62,27 @@
 
 ## Pie Chart
 
-直接用浏览器打开 `Pie Chart/pie-chart.html`。来自 Figma 节点 `552:4512`（272 × 272），样式在 `Pie Chart/assets/css/pie-chart.css`，交互在 `Pie Chart/assets/js/pie-chart.js`。
+直接用浏览器打开 `Pie Chart/pie-chart.html`。来自 Figma 节点 `552:4512`（272 × 272），放在「MegaETH (Internal)」节点 `4341:40564` 的 402 × 874 屏幕背景里（距顶 260px、水平居中；背景纹理与 Button Effect 相同，底部 445 × 309 渐变淡到 `#F4F4F4`），样式在 `Pie Chart/assets/css/pie-chart.css`，交互在 `Pie Chart/assets/js/pie-chart.js`。
 
 - 五段环形由 JS 按 Figma 弧形数据生成：内径比 0.7353（外径 136、内径 100），四角圆角 4px，段间隔 1.6°，起始角 82.8°。比例改动后会自动重排。
-- 点击扇形选中：选中段变为黄色渐变（`#BCB754`），其余为玻璃段；中间金额滚动到新值，说明文字淡出淡入，指针绕圆心转到该段中点。聚焦后可用方向键 / Home / End 切换。
+- 点击扇形选中：选中段变为该段自己的颜色渐变（依次 `#BCB754` `#F8D1C2` `#C3E4F5` `#31318C` `#359E3F`，在 `SEGMENTS` 的 `color`），其余为玻璃段；中间金额滚动到新值，说明文字淡出淡入，指针绕圆心转到该段中点。聚焦后可用方向键 / Home / End 切换。
+- 选中段的黄色渐变带 wave：黄色淡出边缘沿弧线起伏流动：波峰 `PEAK` = 1.5（超过外圈，外缘仍保留部分颜色），波谷再往里 34%（`SWING`），一圈约 5 个波峰（两组反向正弦，约 16°/s），亮带随之移动，并有轻微波纹从内圈向外扩散。由 canvas 逐像素绘制并按扇形路径裁切，参数在 `pie-chart.js` 顶部 `PEAK` / `SWING`、`WAVES`（`k` 波峰数/圈、`speed` 速度、`weight` 两组波的占比、`glow` 亮度变化）与 `RIPPLE`（`count` 环宽内波纹数、`speed` 向外速度、`depth` 明暗幅度）。系统设置减少动态效果时保持静止。
 - 数据在 `SEGMENTS` 数组（名称、百分比、金额）；除 Tokyo Trip 外的名称与金额为占位。
-- 玻璃段近似 Figma GLASS（光线 -45°）：Figma 填充渐变 + 白色内描边高光 + 柔和内发光，在 `#bababa` 背景上与设计稿一致。刻度环与指针使用 Figma 导出的 SVG。
+- 玻璃段近似 Figma GLASS（光线 -45°）：40% 线性渐变（参考 Figma 节点 `4319:32117`，Figma 为 20%）：沿每段中线，内圈 `#ABABAB`（Figma `#D6D6D6` 加深 20%）到外圈透明白+ 白色内描边高光 + 柔和内发光，在 `#bababa` 背景上与设计稿一致。刻度环与指针使用 Figma 导出的 SVG。
 
 ## Plans Stack - Cards Only
 
 Open `plans stack/plans-stack-cards.html` for the cards-only version. Drag the cards, scroll, or use the left/right arrow keys to switch plans. The original version remains at `plans stack/plans-stack.html`.
+
+## DOM Alpha Recorder
+
+Reusable Playwright + FFmpeg transparent DOM recording tool: [`../tools/dom-alpha-recorder/README.md`](../tools/dom-alpha-recorder/README.md). Includes Pie Chart, Plans Stack and Earn Chart recording configurations.
+
+## Button Effect
+
+直接用浏览器打开 `Button Effect/button-effect.html`。来自 Figma「MegaETH (Internal)」节点 `4340:65987`（Light Mode，402 × 874，圆角 32），样式在 `Button Effect/assets/css/button-effect.css`，交互在 `Button Effect/assets/js/button-effect.js`。
+
+- 背景层 402 × 796.103、15% 不透明度、底部圆角 26：`#EFEFCF` 底色上叠两张 color-burn 纹理（第二张按 Figma 裁切参数双向翻转）。Overlay 为 20% `#D9D9D9`，其背景模糊（50）直接作用在背景层上，这样屏幕边缘像 Figma 一样淡到 `#F4F4F4`，而不是混入页面外的灰色。
+- 交易确认界面来自节点 `4341:87866`，按 Figma 绝对坐标排版：状态栏（Inter 500）、40px 白色关闭按钮、标题、Total Amount $500.00、5 行交易明细（10% 黑色分隔线）和底部免责声明；底部另有 445 × 309 渐变淡到 `#F4F4F4`。设计稿中 Overlay 下还有一条状态栏，按背景模糊处理成顶部的柔和阴影。设计稿里画面外（y 1455）的 Recent Activity 列表不可见，未加入。
+- 按钮 378 × 56，位于 (12, 800.5)，64% 黑、圆角 41，左内边距 24；右侧 44px 圆形 36% 白底箭头。
+- 设计稿没有原型交互，额外加了轻量反馈：悬停时按钮加深、箭头右移 2px；按下时缩到 0.97 并在手指位置出现柔光。系统设置减少动态效果时关闭这些动画。

@@ -1,0 +1,400 @@
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("../fonts/SuisseIntl-Book.otf") format("opentype");
+  font-weight: 450;
+  font-style: normal;
+  font-display: swap;
+  /* Figma lays text out on the hhea metrics; browsers use the OS/2 typo ones (USE_TYPO_METRICS). */
+  ascent-override: 98.6%;
+  descent-override: 31.1%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --canvas: #bababa;
+  --screen: #f4f4f4;           /* background/primary/default */
+  --bg-tint: #efefcf;
+  --button: rgba(0, 0, 0, 0.64);
+  --arrow-chip: rgba(255, 255, 255, 0.36);
+  --black: #0e0e0e;
+  --gray: #909090;
+  --muted: rgba(14, 14, 14, 0.3);
+  --font: "Suisse Intl", "Suisse Int'l", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-ui: "Inter", system-ui, -apple-system, sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  background: var(--canvas);
+  font-family: var(--font);
+  font-weight: 450;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img { display: block; max-width: none; }
+
+p, h1, h2 { margin: 0; font: inherit; }
+
+/* ---------- Screen (402 × 874) ---------- */
+
+.be {
+  position: relative;
+  width: 402px;
+  height: 874px;
+  flex: none;
+  overflow: hidden;
+  border-radius: 32px;
+  background: var(--screen);
+}
+
+/* Background: 402 × 796.103 at x −0.5, 15% opacity, bottom corners 26. */
+.be-bg {
+  position: absolute;
+  left: -0.5px;
+  top: 0;
+  width: 402px;
+  height: 796.103px;
+  opacity: 0.15;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 0 0 26px 26px;
+  background: var(--bg-tint);
+  /* The Overlay's background blur (50) — applied here so, as in Figma, it fades to the screen colour
+     at the frame edges instead of sampling the page outside the screen. */
+  filter: blur(25px);
+}
+
+.be-bg-texture,
+.be-bg-texture-2 {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: color-burn;
+}
+
+.be-bg-texture { object-fit: cover; }
+
+.be-bg-texture-2 { overflow: hidden; }
+
+/* Figma CROP fill, flipped on both axes: spans x −29.16% → 129.16%, y −0.87% → 114.31%. */
+.be-bg-texture-2 img {
+  position: absolute;
+  left: -29.16%;
+  top: -0.87%;
+  width: 158.33%;
+  height: 115.18%;
+  transform: scale(-1, -1);
+}
+
+/* Overlay: 511.756 × 930.04 at x −56.887, 20% #d9d9d9 (its blur is on .be-bg). */
+.be-overlay {
+  position: absolute;
+  left: -56.887px;
+  top: 0;
+  width: 511.756px;
+  height: 930.04px;
+  background: rgba(217, 217, 217, 0.2);
+}
+
+/* Fade: 445.001 × 309.385 at (−23.39, 562.66), under the background; transparent white → #f4f4f4. */
+.be-fade {
+  position: absolute;
+  left: -23.39px;
+  top: 562.66px;
+  width: 445.001px;
+  height: 309.385px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), var(--screen));
+}
+
+/* ---------- Review content (node 4341:87866), absolute as in Figma ---------- */
+
+.be-status > *,
+.be-close,
+.be-heading,
+.be-total-label,
+.be-total,
+.be-details > *,
+.be-disclaimer {
+  position: absolute;
+}
+
+/* Status bar (positions relative to the screen). */
+.be-status,
+.be-details {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.be-time {
+  left: 37.87px;
+  top: 25.456px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 14.82px;
+  line-height: 14.82px;
+  color: var(--black);
+}
+.be-signal { left: 308.27px; top: 30.787px; }
+.be-wifi { left: 330.405px; top: 29.343px; }
+.be-batt-frame { left: 350.616px; top: 28.38px; width: 24.06px; height: 12.511px; }
+.be-batt-cap { left: 375.302px; top: 33.192px; width: 1.278px; height: 3.85px; }
+.be-batt-level { left: 352.83px; top: 30.626px; width: 19.441px; height: 8.017px; }
+
+/* Under-overlay status bar (bar at 9.0, 11.19), blurred like the rest of the backdrop (Overlay blur 50). */
+.be-status--under { filter: blur(25px); }
+.be-status--under .be-time {
+  left: 20.95px;
+  top: 33.413px;
+  height: auto;
+  transform: translateY(-50%);
+  font-size: 15.399px;
+  line-height: 15.399px;
+}
+.be-status--under .be-signal { left: 312.817px; top: 25.411px; }
+.be-status--under .be-wifi { left: 334.952px; top: 25.416px; }
+.be-status--under .be-battery { left: 355.156px; top: 25.417px; }
+
+/* Close: 40 × 40 white, radius 12, at (12, 73.5). */
+.be-close {
+  left: 12px;
+  top: 73.5px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #fff;
+  transition: transform 0.25s var(--ease);
+}
+.be-close:active { transform: scale(0.94); }
+.be-close:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+
+.be-heading {
+  left: 13.39px;
+  top: 131.97px;
+  width: 378px;
+  font-size: 20px;
+  line-height: 1.32;
+  color: var(--black);
+  font-feature-settings: "salt" 1;
+}
+.be-muted { color: var(--muted); }
+
+.be-total-label {
+  left: 17.56px;
+  top: 299.14px;
+  font-size: 14px;
+  line-height: normal;
+  color: var(--gray);
+  white-space: nowrap;
+}
+
+.be-total {
+  left: 17.56px;
+  top: 317.14px;
+  font-size: 37.25px;
+  line-height: normal;
+  letter-spacing: -1.49px;
+  color: var(--black);
+  white-space: nowrap;
+}
+.be-total-dot { color: rgba(14, 14, 14, 0.33); }
+.be-total-cents { color: rgba(14, 14, 14, 0.23); }
+
+.be-details-title {
+  left: 20.35px;
+  top: 419px;
+  font-size: 14px;
+  line-height: normal;
+  color: var(--gray);
+  white-space: nowrap;
+}
+
+/* 365.554px rules, 10% black; the 1px export is centred on the line (Figma y − 0.5). */
+.be-divider { left: 20.35px; margin-top: -0.5px; }
+
+.be-key,
+.be-val,
+.be-sub {
+  font-size: 14px;
+  line-height: 1.32;
+  color: #000;
+  white-space: nowrap;
+  font-feature-settings: "salt" 1;
+}
+.be-key { left: 20.91px; }
+.be-val { left: 222.56px; }
+.be-sub { color: rgba(0, 0, 0, 0.27); }
+
+.be-disclaimer {
+  left: 19.94px;
+  /* Figma y 690.35; +2 because Figma sets glyphs lower than CSS when line-height (125%) is under the font's own. */
+  top: 692.35px;
+  width: 362.118px;
+  font-size: 12px;
+  line-height: 1.25;
+  color: #aaa;
+}
+.be-disclaimer a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
+
+@property --be-mix {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* ---------- Button: 378 × 56 at (12, 800.5) ---------- */
+
+.be-button {
+  position: absolute;
+  left: 12px;
+  top: 800.5px;
+  width: 378px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 6px 6px 24px;
+  overflow: hidden;
+  border-radius: 41px;
+  --be-mix: 0;
+  --be-state-duration: 500ms;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+  line-height: normal;
+  white-space: nowrap;
+  outline: none;
+  transition: transform 0.35s var(--ease), --be-mix var(--be-state-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Blur the complete original layer, including content and its outer silhouette. */
+.be-state-one {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: inherit;
+  border-radius: inherit;
+  background: var(--button);
+  opacity: 1;
+  filter: blur(calc(24px * var(--be-mix)));
+  z-index: 0;
+  pointer-events: none;
+  transition: background-color 250ms ease;
+}
+.be-button:hover .be-state-one { background: rgba(0, 0, 0, 0.7); }
+.be-button.is-active .be-state-one { background: #F8F8DA; }
+.be-button:focus-visible { box-shadow: 0 0 0 2px var(--screen), 0 0 0 4px rgba(0, 0, 0, 0.64); }
+.be-button.is-pressed { transform: scale(0.97); }
+
+.be-label { position: relative; }
+
+.be-label,
+.be-arrow {
+  z-index: 2;
+  opacity: 1;
+  transition: background-color 250ms ease;
+}
+
+.be-metal {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  border-radius: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity var(--be-state-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+.be-metal canvas { display: block; width: 100%; height: 100%; }
+.be-button.is-metal-ready .be-metal { opacity: 1; }
+.be-button.is-metal-ready {
+  --be-mix: 1;
+  overflow: visible;
+}
+.be-button.is-metal-fallback .be-metal {
+  inset: 0 !important;
+  border-radius: inherit;
+  background: linear-gradient(115deg, #111, #ddd 18%, #777 31%, #fff 44%, #292929 55%, #d4d4d4 68%, #555 80%, #eee);
+  background-size: 220% 100%;
+  animation: be-metal-flow 4s linear infinite alternate;
+}
+.be-button.is-active::before { opacity: 0; }
+@keyframes be-metal-flow { to { background-position: 100% 50%; } }
+
+.be-arrow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--arrow-chip);
+}
+
+.be-arrow img { transition: transform 0.35s var(--ease); }
+
+.be-button:hover .be-arrow { background: rgba(255, 255, 255, 0.44); }
+.be-button:hover .be-arrow img { transform: none; }
+
+/* Pointer-follow sheen on press (JS sets --x / --y). */
+.be-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(120px circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.16), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.be-button.is-pressed::before { opacity: 1; transition-duration: 0.12s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .be-button,
+  .be-label,
+  .be-metal,
+  .be-arrow,
+  .be-arrow img,
+  .be-button::before,
+  .be-state-one { transition: none; }
+  .be-button.is-pressed { transform: none; }
+  .be-button:hover .be-arrow img { transform: none; }
+  .be-button.is-metal-fallback .be-metal { animation: none; }
+}

@@ -12,6 +12,8 @@
 
 :root {
   --canvas: #bababa;
+  --screen: #f4f4f4;           /* background/primary/default */
+  --bg-tint: #efefcf;
   --black: #0e0e0e;
   --caption: rgba(14, 14, 14, 0.3);
   --font: "Suisse Intl", "Suisse Int'l", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -37,10 +39,71 @@ p { margin: 0; font: inherit; }
 
 img { display: block; max-width: none; }
 
-/* ---------- Chart (272 × 272) ---------- */
+/* ---------- Screen (402 × 874) ---------- */
+
+.pc-screen {
+  position: relative;
+  width: 402px;
+  height: 874px;
+  flex: none;
+  overflow: hidden;
+  border-radius: 32px;
+  background: var(--screen);
+}
+
+/* Background: 402 × 796.103 at x −0.5, 15% opacity, bottom corners 26. */
+.pc-bg {
+  position: absolute;
+  left: -0.5px;
+  top: 0;
+  width: 402px;
+  height: 796.103px;
+  opacity: 0.15;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 0 0 26px 26px;
+  background: var(--bg-tint);
+}
+
+.pc-bg-texture,
+.pc-bg-texture-2 {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: color-burn;
+}
+
+.pc-bg-texture { object-fit: cover; }
+
+.pc-bg-texture-2 { overflow: hidden; }
+
+/* Figma CROP fill, flipped on both axes: spans x −29.16% → 129.16%, y −0.87% → 114.31%. */
+.pc-bg-texture-2 img {
+  position: absolute;
+  left: -29.16%;
+  top: -0.87%;
+  width: 158.33%;
+  height: 115.18%;
+  transform: scale(-1, -1);
+}
+
+/* Fade: 445.001 × 309.385 at (−23.395, 525.773), transparent white → #f4f4f4. */
+.pc-bg-fade {
+  position: absolute;
+  left: -23.395px;
+  top: 525.773px;
+  width: 445.001px;
+  height: 309.385px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), var(--screen));
+}
+
+/* ---------- Chart (272 × 272), top 260, centred ---------- */
 
 .pc {
-  position: relative;
+  position: absolute;
+  left: 65px;
+  top: 260px;
   width: 272px;
   height: 272px;
 }
@@ -52,7 +115,17 @@ img { display: block; max-width: none; }
   overflow: visible;
 }
 
-/* Each segment has a glass layer and a selected (yellow) layer; selection crossfades them. */
+/* Selected (yellow) fill with the slow wave, drawn under the SVG by JS and clipped to each segment. */
+.pc-wave {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 272px;
+  height: 272px;
+  pointer-events: none;
+}
+
+/* Each segment's glass layer fades out while the canvas fades its yellow fill in. */
 .pc-seg {
   cursor: pointer;
   outline: none;
@@ -60,13 +133,10 @@ img { display: block; max-width: none; }
 }
 
 .pc-seg-glass,
-.pc-seg-selected,
 .pc-seg-sheen {
   transition: opacity 0.45s var(--ease);
 }
 
-.pc-seg-selected { opacity: 0; }
-.pc-seg[aria-checked="true"] .pc-seg-selected { opacity: 1; }
 .pc-seg[aria-checked="true"] .pc-seg-glass { opacity: 0; }
 
 .pc-seg-sheen { opacity: 0; }
@@ -141,7 +211,6 @@ img { display: block; max-width: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .pc-seg-glass,
-  .pc-seg-selected,
   .pc-seg-sheen,
   .pc-pointer,
   .pc-caption { transition: none; }
@@ -149,4 +218,39 @@ img { display: block; max-width: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .pc-caption [data-pc="caption"] { transition: none; }
+}
+
+/* Touch circle replaces the native pointer inside the widget. */
+.pc.has-touch-cursor,
+.pc.has-touch-cursor * { cursor: none !important; }
+
+.pc-touch-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.pc-touch-circle.is-visible { opacity: 1; }
+.pc-touch-circle::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.32);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 120ms ease, background 120ms ease;
+}
+.pc-touch-circle.is-pressed::before {
+  transform: scale(0.8);
+  background: rgba(255, 255, 255, 0.6);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pc-touch-circle, .pc-touch-circle::before { transition: none; }
 }

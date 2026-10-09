@@ -1,0 +1,10 @@
+{
+  "name": "button-effect",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild assets/js/liquid-metal-source.js --bundle --format=iife --minify --legal-comments=linked --outfile=assets/js/liquid-metal.js"
+  },
+  "dependencies": { "@paper-design/shaders": "0.0.81" },
+  "devDependencies": { "esbuild": "0.28.2" }
+}

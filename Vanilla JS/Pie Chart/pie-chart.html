@@ -9,20 +9,30 @@
 <body>
 <!-- Pie Chart: Figma "Untitled" node 552:4512. 272 × 272.
      Segments are drawn by assets/js/pie-chart.js from the Figma arc data (inner radius 0.7353, 4px corners, 1.6° gaps).
-     Click / tap a segment, or focus the chart and use the arrow keys, to select it. Data lives in SEGMENTS. -->
-<main class="pc" data-pc>
-  <svg class="pc-segments" data-pc="segments" width="272" height="272" viewBox="0 0 272 272"
-       role="radiogroup" aria-label="Savings plans"></svg>
-
-  <img class="pc-ticks" src="./assets/img/tick-ring.svg" width="173" height="173" alt="">
-
-  <div class="pc-pointer" data-pc="pointer" aria-hidden="true">
-    <img src="./assets/img/pointer.svg" width="9.995" height="9.83" alt="">
+     Click / tap a segment, or focus the chart and use the arrow keys, to select it. Data lives in SEGMENTS.
+     Screen background: Figma "MegaETH (Internal)" node 4341:40564 ("Light Mode"), 402 × 874; chart at top 260, centred. -->
+<main class="pc-screen">
+  <div class="pc-bg" aria-hidden="true">
+    <img class="pc-bg-texture" src="./assets/img/bg-texture.png" alt="">
+    <span class="pc-bg-texture-2"><img src="./assets/img/bg-texture-2.png" alt=""></span>
   </div>
+  <div class="pc-bg-fade" aria-hidden="true"></div>
 
-  <div class="pc-label" aria-live="polite">
-    <p class="pc-value"><number-flow data-pc="value">$52,000</number-flow></p>
-    <p class="pc-caption"><number-flow data-pc="percent">35%</number-flow> <span data-pc="caption">Tokyo Trip</span></p>
+  <div class="pc" data-pc>
+    <canvas class="pc-wave" data-pc="wave" width="272" height="272" aria-hidden="true"></canvas>
+    <svg class="pc-segments" data-pc="segments" width="272" height="272" viewBox="0 0 272 272"
+         role="radiogroup" aria-label="Savings plans"></svg>
+
+    <img class="pc-ticks" src="./assets/img/tick-ring.svg" width="173" height="173" alt="">
+
+    <div class="pc-pointer" data-pc="pointer" aria-hidden="true">
+      <img src="./assets/img/pointer.svg" width="9.995" height="9.83" alt="">
+    </div>
+
+    <div class="pc-label" aria-live="polite">
+      <p class="pc-value"><number-flow data-pc="value">$52,000</number-flow></p>
+      <p class="pc-caption"><number-flow data-pc="percent">35%</number-flow> <span data-pc="caption">Tokyo Trip</span></p>
+    </div>
   </div>
 </main>
 <script type="module">
