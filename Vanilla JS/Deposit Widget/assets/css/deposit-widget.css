@@ -85,8 +85,8 @@ button {
   /* filter: saturate(); */
 }
 
-.dw.has-orb .dw-orb { opacity: 0.5; }
-.dw.has-orb.is-orb-dragging .dw-orb { opacity: 1; }
+.dw.has-orb .dw-orb { opacity: var(--orb-idle-opacity, 0.5); }
+.dw.has-orb.is-orb-dragging .dw-orb { opacity: var(--orb-drag-opacity, 1); }
 .dw.has-orb .dw-glow { opacity: 0; }
 .dw-glow { transition: opacity 0.6s ease; }
 
@@ -376,3 +376,8 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .dw-touch-circle, .dw-touch-circle::before { transition: none; }
 }
+
+/* Native controls; layout only, leaving form controls at browser defaults. */
+.dw-demo { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 24px; padding: 24px; }
+.dw-shader-controls { max-width: 360px; }
+.dw-shader-controls p { margin: 1em 0; }

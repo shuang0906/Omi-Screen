@@ -10,6 +10,7 @@
 <!-- Deposit Widget: Figma "Untitled" node 512:7067. 370 × 555 card.
      Drag / wheel / arrow keys on the ruler to change the deposit; chips switch the yield period.
      Rate and range are set in assets/js/deposit-widget.js. -->
+<div class="dw-demo">
 <main class="dw" data-dw>
   <img class="dw-glow" src="./assets/img/glow.svg" width="500" height="270" alt="">
   <canvas class="dw-orb" data-dw="orb" aria-hidden="true"></canvas>
@@ -47,6 +48,11 @@
     <span class="dw-cta-text">Add funds to start</span>
   </button>
 </main>
+<aside class="dw-shader-controls" data-dw-controls aria-label="Shader controls">
+  <h2>Shader controls</h2>
+  <p>Drag the amount ruler to preview dragging settings. Release to restore idle settings.</p>
+</aside>
+</div>
 <!-- CTA soft-edge mask (Figma "Fill" mask). Referenced from CSS so it also works when opened via file://,
      where CSS mask-image files are blocked by CORS. -->
 <svg class="dw-defs" aria-hidden="true" width="0" height="0">
