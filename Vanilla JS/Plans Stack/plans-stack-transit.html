@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plans Stack Transit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap">
+<link rel="stylesheet" href="./assets/css/plans-stack.css">
+<link rel="stylesheet" href="./assets/css/plans-stack-cards.css">
+<link rel="stylesheet" href="./assets/css/plans-stack-transit.css">
+</head>
+<body>
+<!-- Home with the plans stack → plan detail. Click / Enter on the front card: it grows into the detail hero
+     (Figma "MegaETH (Internal)" node 4404:33902, 402 × 1289, scrolls inside the 402 × 874 screen).
+     The × at the bottom (or Esc) reverses it. Behaviour in assets/js/plans-stack-transit.js. -->
+<main class="plans plans-cards-only plans-transit" data-pt="root">
+  <!-- Home (Figma node 4422:37225, 402 × 874): scrolls under the pinned status bar and nav. -->
+  <div class="pt-home" data-pt="home">
+    <div class="pt-home-page">
+      <div class="pt-home-bg" aria-hidden="true"></div>
+      <h1 class="pt-home-title" data-pt="home-part">Intent Plans</h1>
+
+      <section class="plans-stage" aria-roledescription="carousel" aria-label="Intent plans">
+        <div class="stack" data-stack="cards" role="slider" tabindex="0" aria-label="Plans. Drag, scroll, or use left and right arrow keys to change plan. Press Enter to open" aria-valuemin="1"></div>
+        <!-- Required by plans-stack-cards.js; the new design drags the cards directly, so it stays hidden. -->
+        <div class="ruler" data-stack="ruler" role="slider" tabindex="-1" aria-hidden="true" aria-valuemin="1">
+          <svg class="ruler-ticks" data-stack="ticks" width="351.5" height="18" viewBox="0 0 351.5 18" fill="none" aria-hidden="true"></svg>
+        </div>
+      </section>
+
+      <div class="pt-home-actions" data-pt="home-part">
+        <button class="pt-pill" type="button">Add Plan<span class="pt-pill-icon"><img src="./assets/img/home/plus.svg" width="16" height="16" alt=""></span></button>
+        <button class="pt-pill" type="button">See all<span class="pt-pill-icon pt-pill-arrow">→</span></button>
+      </div>
+
+      <section class="pt-activity" data-pt="home-part" aria-label="Recent Activity">
+        <h2 class="pt-activity-title">Recent Activity</h2>
+        <ul class="pt-act-list">
+        <li class="pt-act-row">
+          <div class="pt-act-top">
+            <p class="pt-act-name">Yield Payout</p>
+            <p class="pt-act-amount">+$1.50<img src="./assets/img/home/chevron.svg" width="16" height="16" alt=""></p>
+          </div>
+          <p class="pt-act-plan">Tokyo Trip</p>
+          <p class="pt-act-meta">Sep 12, 2026 • APY 6.1%</p>
+        </li>
+        <li class="pt-act-row">
+          <div class="pt-act-top">
+            <p class="pt-act-name">Yield Payout</p>
+            <p class="pt-act-amount">+$4.50<img src="./assets/img/home/chevron.svg" width="16" height="16" alt=""></p>
+          </div>
+          <p class="pt-act-plan">Home Desk</p>
+          <p class="pt-act-meta">Sep 11, 2026 • APY 5.8%</p>
+        </li>
+        <li class="pt-act-row">
+          <div class="pt-act-top">
+            <p class="pt-act-name">Yield Payout</p>
+            <p class="pt-act-amount">+$7.70<img src="./assets/img/home/chevron.svg" width="16" height="16" alt=""></p>
+          </div>
+          <p class="pt-act-plan">Tokyo Trip</p>
+          <p class="pt-act-meta">Sep 10, 2026 • APY 4.1%</p>
+        </li>
+        <li class="pt-act-row">
+          <div class="pt-act-top">
+            <p class="pt-act-name">Yield Payout</p>
+            <p class="pt-act-amount">+$7.50<img src="./assets/img/home/chevron.svg" width="16" height="16" alt=""></p>
+          </div>
+          <p class="pt-act-plan">Tokyo Trip</p>
+          <p class="pt-act-meta">Sep 9, 2026 • APY 5.6%</p>
+        </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <div class="pt-home-status" data-pt="home-part" aria-hidden="true">
+    <span class="pt-home-time">9:41</span>
+    <img class="pt-home-signal" src="./assets/img/home/signal.svg" width="17.3234" height="9.62413" alt="">
+    <img class="pt-home-wifi" src="./assets/img/home/wifi.svg" width="14.6983" height="10.5535" alt="">
+    <img class="pt-home-battery" src="./assets/img/home/battery.svg" width="25.9641" height="12.5114" alt="">
+  </div>
+
+  <nav class="pt-nav" data-pt="home-part" aria-label="Main" style="display:none;">
+    <div class="pt-nav-bar">
+      <button class="pt-nav-item is-active" type="button" aria-label="Home" aria-current="page"><img src="./assets/img/home/house.svg" width="27.1395" height="26.0539" alt=""></button>
+      <button class="pt-nav-item" type="button" aria-label="Cards"><img src="./assets/img/home/card.svg" width="26.0539" height="26.0539" alt=""></button>
+      <button class="pt-nav-item" type="button" aria-label="Profile"><img src="./assets/img/home/user.svg" width="26.0539" height="26.0539" alt=""></button>
+      <button class="pt-nav-item" type="button" aria-label="Info"><img src="./assets/img/home/info.svg" width="26.0539" height="26.0539" alt=""></button>
+    </div>
+    <button class="pt-concierge" type="button" aria-label="AI Concierge"><span><img src="./assets/img/home/concierge.png" alt=""></span></button>
+  </nav>
+
+  <div class="pt-detail" data-pt="detail" aria-hidden="true" inert>
+    <div class="pt-backdrop" data-pt="backdrop" aria-hidden="true">
+      <!-- The Pay screen underneath, seen through the frosted layer (background blur 135.8). -->
+      <div class="pt-under"><div class="pt-under-rewards"></div></div>
+      <div class="pt-frost"></div>
+    </div>
+
+    <div class="pt-scroll" data-pt="scroll">
+      <div class="pt-page">
+        <div class="pt-row pt-sec" style="top: 525.5px">
+          <div class="pt-field">
+            <img class="pt-pencil" src="./assets/img/detail/pencil.svg" width="20" height="20" alt="">
+            <p class="pt-field-label">Destination</p>
+            <p class="pt-field-value">Tokyo, Japan</p>
+          </div>
+          <div class="pt-field">
+            <img class="pt-pencil" src="./assets/img/detail/pencil.svg" width="20" height="20" alt="">
+            <p class="pt-field-label">Category</p>
+            <p class="pt-field-value" style="left: 21px">Travel</p>
+          </div>
+        </div>
+
+        <div class="pt-field pt-field--wide pt-sec" style="top: 623.5px">
+          <img class="pt-pencil" src="./assets/img/detail/pencil.svg" width="20" height="20" alt="">
+          <p class="pt-field-label">Notes</p>
+          <p class="pt-field-value" style="left: 15px; top: 57px; width: 298.615px">Two Travelers, from NY</p>
+        </div>
+
+        <div class="pt-savings pt-sec" style="top: 721.5px">
+          <p class="pt-sv-key" style="top: 17.4px">Deposite</p>
+          <p class="pt-sv-val" style="top: 17.4px">+1,200.00</p>
+          <img class="pt-sv-rule" style="top: 45.63px" src="./assets/img/detail/rule-savings.svg" width="333.628" height="0.5" alt="">
+          <p class="pt-sv-key" style="top: 56.16px">Yield contribution ⓘ</p>
+          <p class="pt-sv-val" style="top: 56.16px">+1,200.00</p>
+          <img class="pt-sv-rule" style="top: 86.19px" src="./assets/img/detail/rule-savings.svg" width="333.628" height="0.5" alt="">
+          <p class="pt-sv-key pt-strong" style="top: 97px">Total Saved</p>
+          <p class="pt-sv-val pt-strong" style="top: 97px">+1,200.00</p>
+        </div>
+
+        <section class="pt-latest pt-sec" style="top: 864px" aria-label="Latest Transactions">
+          <div class="pt-latest-head">
+            <h2>Latest Transactions</h2>
+            <a href="#">See all<img src="./assets/img/detail/see-all.svg" width="14" height="14" alt=""></a>
+          </div>
+          <ul class="pt-tx" data-pt="tx"></ul>
+        </section>
+
+        <article class="pt-hero" data-pt="hero">
+          <img class="pt-hero-img" data-pt="hero-img" src="./assets/img/plans/sea.png" alt="">
+          <div class="pt-hero-band"></div>
+          <div class="pt-hero-ui" data-pt="hero-ui">
+            <h1 class="pt-hero-title" data-pt="hero-title">Tokyo Trip</h1>
+            <p class="pt-hero-meta" data-pt="hero-meta">Flight • Jan 15</p>
+            <button class="pt-more" type="button" aria-label="More options">
+              <img src="./assets/img/detail/more.svg" width="16.0497" height="16.0497" alt="">
+            </button>
+            <div class="pt-hero-amount">
+              <p class="pt-hero-value">$1,290</p>
+              <p class="pt-hero-goal">$1,290/$5,000</p>
+            </div>
+            <div class="pt-bars" data-pt="bars" aria-hidden="true"></div>
+            <button class="pt-add" type="button">Add Funds</button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="pt-chrome-top" data-pt="chrome-top" aria-hidden="true">
+      <span class="pt-time">9:41</span>
+      <img class="pt-signal" src="./assets/img/detail/signal.svg" width="17.3234" height="9.62413" alt="">
+      <img class="pt-wifi" src="./assets/img/detail/wifi.svg" width="14.6983" height="10.5535" alt="">
+      <img class="pt-batt-frame" src="./assets/img/detail/battery-frame.svg" width="25" height="13" alt="">
+      <img class="pt-batt-cap" src="./assets/img/detail/battery-cap.svg" width="1.32804" height="4" alt="">
+      <img class="pt-batt-level" src="./assets/img/detail/battery-level.svg" width="20.2" height="8.33" alt="">
+      <span class="pt-island"></span>
+    </div>
+
+    <div class="pt-chrome-bottom" data-pt="chrome-bottom">
+      <div class="pt-bottom-fade" aria-hidden="true"></div>
+      <button class="pt-close" type="button" data-pt="close" aria-label="Close">
+        <img src="./assets/img/detail/close.svg" width="14.9902" height="14.9902" alt="">
+      </button>
+    </div>
+  </div>
+</main>
+<div class="sr-only" aria-live="polite" data-announcement></div>
+<script src="./assets/js/plans-stack-cards.js"></script>
+<script src="./assets/js/plans-stack-transit.js"></script>
+</body>
+</html>

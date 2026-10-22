@@ -83,7 +83,9 @@
   }
 
   const stack = document.querySelector('[data-stack="cards"]');
-  const ruler = stack;
+  const ruler = document.querySelector('[data-stack="ruler"]');
+  const inputSurface = stack.closest('.plans-stage');
+  const ticksSvg = document.querySelector('[data-stack="ticks"]');
   const announcement = document.querySelector('[data-announcement]');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const N = PLANS.length;
@@ -103,7 +105,16 @@
     </article>`).join('');
   const cards = Array.from(stack.children);
 
+  // Same geometry as the Figma ruler (15 ticks, 25px apart); drawn in code so the ticks
+  // can slide while the dark centre tick stays put. One spare tick each side fades in/out.
+  const SLIDING = 17;
+  ticksSvg.innerHTML =
+    Array.from({ length: SLIDING }, () => `<line class="tick" y1="0" y2="${RULER_H}"/>`).join('') +
+    `<line class="tick-active" x1="${RULER_CENTER}" x2="${RULER_CENTER}" y1="0" y2="${RULER_H}"/>`;
+  const ticks = Array.from(ticksSvg.querySelectorAll('.tick'));
+
   ruler.setAttribute('aria-valuemax', N);
+  stack.setAttribute('aria-valuemax', N);
 
   // State: ruler offset in px. Negative = ticks moved left = later cards.
   let offset = 0;
@@ -138,9 +149,13 @@
       }
       let top, size, blur, opacity;
       if (d < 0) {
-        // Front card dropping out of frame.
+        // Blur the departing card below the ruler, keeping its opacity unchanged.
         ({ size, blur, opacity } = LEVELS[0]);
         top = LEVELS[0].top - d * DROP;
+        const fadeStart = ruler.offsetTop + 20; // Visible tick line, in stage coordinates.
+        const fadeEnd = LEVELS[0].top + DROP;
+        const exit = Math.max(0, Math.min(1, (top - fadeStart) / (fadeEnd - fadeStart)));
+        blur += 16 * exit;
       } else {
         ({ top, size, blur, opacity } = level(d));
       }
@@ -154,10 +169,22 @@
       card.style.setProperty('--fade', Math.max(0, 1 - Math.max(0, d) * 1.6).toFixed(3));
     });
 
+    // Ticks slide with the offset; fade out over one gap beyond either end.
+    const shift = mod(offset, TICK_GAP);
+    ticks.forEach((tick, k) => {
+      const x = .75 + (k - 1) * TICK_GAP + shift;
+      const outside = Math.max(0, -x, x - (RULER_W - .75));
+      tick.setAttribute('x1', x.toFixed(2));
+      tick.setAttribute('x2', x.toFixed(2));
+      tick.style.opacity = Math.max(0, 1 - outside / TICK_GAP).toFixed(3);
+    });
+
     const index = mod(Math.round(pos), N);
     if (index !== lastIndex) {
       lastIndex = index;
       cards.forEach((card, i) => card.setAttribute('aria-hidden', String(i !== index)));
+      stack.setAttribute('aria-valuenow', index + 1);
+      stack.setAttribute('aria-valuetext', `${PLANS[index].name}, ${index + 1} of ${N}`);
       ruler.setAttribute('aria-valuenow', index + 1);
       ruler.setAttribute('aria-valuetext', `${PLANS[index].name}, ${index + 1} of ${N}`);
       if (announcement && !dragging) announcement.textContent = `${PLANS[index].name}, ${index + 1} of ${N}`;
@@ -198,7 +225,7 @@
 
   // Wheel navigation on the cards, one card per gesture burst.
   let wheelReadyAt = 0;
-  ruler.addEventListener('wheel', event => {
+  inputSurface.addEventListener('wheel', event => {
     event.preventDefault();
     if (dragging || held.length || performance.now() < wheelReadyAt) return;
     const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
@@ -210,10 +237,12 @@
   // Horizontal drag directly on the cards.
   let lastX = 0;
   let samples = [];
-  ruler.addEventListener('pointerdown', e => {
+  let captureTarget = null;
+  inputSurface.addEventListener('pointerdown', e => {
     if (e.button !== 0) return;
     dragging = true;
-    ruler.setPointerCapture(e.pointerId);
+    captureTarget = e.target.closest('.plan, .ruler') || inputSurface;
+    captureTarget.setPointerCapture(e.pointerId);
     ruler.classList.add('is-dragging');
     clearTimeout(holdTimer);
     stopSpin();
@@ -224,7 +253,7 @@
     lastX = e.clientX;
     samples = [{ t: e.timeStamp, a: offset }];
   });
-  ruler.addEventListener('pointermove', e => {
+  inputSurface.addEventListener('pointermove', e => {
     if (!dragging) return;
     offset += (e.clientX - lastX) * DRAG_GAIN;
     lastX = e.clientX;
@@ -237,7 +266,8 @@
     if (!dragging) return;
     dragging = false;
     ruler.classList.remove('is-dragging');
-    if (ruler.hasPointerCapture(e.pointerId)) ruler.releasePointerCapture(e.pointerId);
+    if (captureTarget?.hasPointerCapture(e.pointerId)) captureTarget.releasePointerCapture(e.pointerId);
+    captureTarget = null;
     const first = samples[0];
     const dt = e.timeStamp - first.t;
     const velocity = dt > 0 ? (offset - first.a) / dt : 0; // px per ms
@@ -246,8 +276,8 @@
     const limit = STEP;
     animateTo(snap(Math.max(offset - limit, Math.min(offset + limit, projected))), EASE_RELEASE);
   }
-  ruler.addEventListener('pointerup', release);
-  ruler.addEventListener('pointercancel', release);
+  inputSurface.addEventListener('pointerup', release);
+  inputSurface.addEventListener('pointercancel', release);
 
   // Keyboard: right = next card (ticks move left).
   // Tap = one card; hold = keep flipping until the key is released.
@@ -312,7 +342,7 @@
     animateTo(next, cubicBezier(.33, y1, .68, 1), duration);
   }
 
-  ruler.addEventListener('keydown', e => {
+  inputSurface.addEventListener('keydown', e => {
     if (!(e.key in KEY_DIR)) return;
     e.preventDefault();
     if (reduceMotion.matches) {
@@ -351,13 +381,13 @@
     clearTimeout(holdTimer);
     if (spin) releaseSpin();
   }
-  ruler.addEventListener('keyup', e => {
+  inputSurface.addEventListener('keyup', e => {
     const i = held.indexOf(e.key);
     if (i < 0) return;
     held.splice(i, 1);
     if (!held.length) endKeys();
   });
-  ruler.addEventListener('blur', () => {
+  inputSurface.addEventListener('focusout', () => {
     held.length = 0;
     endKeys();
   });

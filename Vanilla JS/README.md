@@ -74,6 +74,19 @@
 
 Open `plans stack/plans-stack-cards.html` for the cards-only version. Drag the cards, scroll, or use the left/right arrow keys to switch plans. The original version remains at `plans stack/plans-stack.html`.
 
+Background: Figma node `4402:36626` — a 402 × 795 frame (top corners 30 / 35) with the blue vertical gradient over `#878787`, as rendered in Figma. Extra gradient stops reproduce Figma's unpremultiplied blending. The stack is shifted so the front card is centred where Figma's is (y 337.5). Styles are in `assets/css/plans-stack-cards.css`.
+
+## Plans Stack - Transit
+
+直接用浏览器打开 `Plans Stack/plans-stack-transit.html`。初始界面来自 Figma 节点 `4422:37225`（402 × 874）：Intent Plans 标题、卡片堆（复用 `plans-stack-cards.js`）、Add Plan / See all 按钮和 Recent Activity 列表，页面可向下滚动，状态栏与底部导航（Nav Bar + AI Concierge，毛玻璃）固定。新设计里没有刻度尺，直接拖动卡片切换；刻度尺元素仍保留但隐藏，因为 `plans-stack-cards.js` 需要它。点击前卡（或聚焦后按 Enter / 空格）进入计划详情，详情来自 Figma 节点 `4404:33902`（402 × 1289，在 402 × 874 屏幕内滚动）。样式在 `assets/css/plans-stack-transit.css`，动画在 `assets/js/plans-stack-transit.js`。
+
+- 打开：前卡本身放大成 370 × 450 的详情大图（720ms，`cubic-bezier(.32,.72,0,1)`），卡上原有文字淡出、详情文字随后淡入；其余卡片下沉、缩小并模糊消失，标题、按钮、Recent Activity、状态栏和导航一起淡出；磨砂背景淡入，下方各区块依次上浮出现；状态栏与底部 × 最后出现。
+- 关闭：点底部 ×（或 Esc），大图缩回卡片原位（即使已向下滚动），其余元素反向退出。拖动卡片不会触发打开。
+- 详情使用所点卡片的图片、名称和日期；金额、字段与交易记录为设计稿中的占位内容。状态栏、灵动岛、底部渐变与 × 固定在屏幕上，内容在其间滚动。
+- 设计稿中磨砂层下方的 Pay 页面被 135.8 背景模糊后只剩颜色，因此只保留了 Personalized Rewards 黄色卡片作为模糊色块。
+- 标题与金额使用 Suisse Int'l Medium，说明文字使用 Regular，字体文件在 `assets/fonts/`（从本机安装的字体复制）。
+- 系统设置减少动态效果时直接切换，不播放动画。
+
 ## DOM Alpha Recorder
 
 Reusable Playwright + FFmpeg transparent DOM recording tool: [`../tools/dom-alpha-recorder/README.md`](../tools/dom-alpha-recorder/README.md). Includes Pie Chart, Plans Stack and Earn Chart recording configurations.

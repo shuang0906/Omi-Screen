@@ -28,16 +28,16 @@
   // glow = brightness swing of the band that travels with it.
   const SELECTED_ALPHA = 0.6;
   const WAVES = [
-    { k: 5, speed: 1.4,  weight: 0.7, glow: 0.1 },
-    { k: 9, speed: -0.9, weight: 0.3, glow: 0.05 },
+    { k: 5, speed: 1.4,  weight: 0.7, glow: 0.22 },
+    { k: 9, speed: -0.9, weight: 0.3, glow: 0.1 },
   ];
   // Where the fade ends, as a share of the ring width (1 = the outer edge): at the crests (PEAK)
   // and how far the troughs drop below them (SWING).
   const PEAK = 1.5;
-  const SWING = 0.34;
-  // Ripples running outward through the gradient: count across the ring width, speed in ring widths/s,
-  // depth = brightness swing.
-  const RIPPLE = { count: 1.6, speed: 0.35, depth: 0.1 };
+  const SWING = 0.85;
+  // Brightness ripples travel around the ring, with no outward radial motion.
+  // count = whole crests per turn; speed = turns/s; depth = brightness swing.
+  const RIPPLE = { count: 2, speed: 0.35, depth: 0.25 };
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const root = document.querySelector('[data-pc]');
@@ -119,9 +119,8 @@
   }
 
   // Shared paints. The rim / glow approximate the GLASS effect (light −45°, intensity 0.8, depth 16).
-  // Unselected fill (after Figma node 4319:32117): 40% linear gradient along each segment's centre radius,
+  // Unselected fill: 40% radial gradient concentric with the ring,
   // #ABABAB at the inner edge (Figma #D6D6D6, 20% darker) fading to transparent white at the outer edge.
-  const GLASS_FILL_LENGTH = R - RI;
   const defs = el('defs');
   defs.innerHTML = `
     <linearGradient id="pc-rim" x1="0" y1="0" x2="1" y2="1">
@@ -144,11 +143,12 @@
     const clipId = `pc-clip-${i}`;
 
     const mid = (a + b) / 2;
-    const [x1, y1] = pt(mid, R - GLASS_FILL_LENGTH).split(' ');
-    const [x2, y2] = pt(mid, R).split(' ');
-    const fill = el('linearGradient', { id: `pc-fill-glass-${i}`, gradientUnits: 'userSpaceOnUse', x1, y1, x2, y2 });
+    const fill = el('radialGradient', {
+      id: `pc-fill-glass-${i}`, gradientUnits: 'userSpaceOnUse',
+      cx: C, cy: C, r: R,
+    });
     fill.append(
-      el('stop', { offset: '0', 'stop-color': '#ababab' }),
+      el('stop', { offset: String(RI / R), 'stop-color': '#ababab' }),
       el('stop', { offset: '1', 'stop-color': '#fff', 'stop-opacity': '0' }),
     );
     defs.appendChild(fill);
@@ -244,7 +244,7 @@
       }
       const reach = PEAK - SWING * (1 - wave) / 2;
       const r = Math.max(0, u[n]);
-      glow += RIPPLE.depth * Math.sin(TAU * (r * RIPPLE.count - time * RIPPLE.speed));
+      glow += RIPPLE.depth * Math.sin(RIPPLE.count * (th[n] - TAU * time * RIPPLE.speed));
       const t = Math.max(0, 1 - r / reach);
       px[p + 3] = Math.min(255, SELECTED_ALPHA * t * glow * 255);
     }

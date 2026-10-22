@@ -235,7 +235,7 @@ export default function Page() {
         </div>
       </main>
       <div className="controls">
-        <CanvasRecorder containerRef={glowRef} filename="shdr11-center-motion" beforeStart={jumpToCenter} onRecordingChange={setRecording} />
+        <CanvasRecorder containerRef={glowRef} filename="shdr11-center-motion" beforeStart={jumpToCenter} onRecordingChange={setRecording} transparentWebm />
         <a href="/shdr21-center-motion">SHDR-21 center motion</a>
         <span>SHDR-11 · Hydrogen</span>
         <a href="/shdr11-center-motion-3d">3D 版本</a>

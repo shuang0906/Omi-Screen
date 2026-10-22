@@ -1,13 +1,35 @@
-/* Cards only: no frame, stage background, ruler, buttons or custom cursor. */
+/* Cards with a draggable ruler; no buttons or custom cursor.
+   Background: Figma "MegaETH (Internal)" node 4402:36626 — 402 × 795, top corners 30 / 35, blue vertical
+   gradient. The gradient is translucent; in Figma it sits over #878787, used here as the base. */
 .plans-cards-only {
-  width: min(390px, 100%);
-  height: 420px;
+  width: 402px;
+  height: 795px;
   border-radius: 0;
-  background: transparent;
+  background:
+    /* Figma stops at 2.77 / 19.23 / 33.02 / 60.67 / 78.91 / 88.37%. The in-between stops reproduce Figma's
+       unpremultiplied blending where opacity changes (CSS would otherwise tint the top bluer). */
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0) 2.7695%,
+      rgba(203, 221, 232, 0.08) 6.885%,
+      rgba(152, 188, 212, 0.16) 11.001%,
+      rgba(100, 154, 191, 0.24) 15.116%,
+      rgba(49, 121, 170, 0.32) 19.232%,
+      rgba(0, 85, 145, 0.32) 33.018%,
+      rgba(98, 157, 195, 0.32) 60.668%,
+      rgba(122, 175, 208, 0.282) 65.228%,
+      rgba(146, 192, 220, 0.243) 69.787%,
+      rgba(171, 210, 232, 0.205) 74.347%,
+      rgba(195, 228, 245, 0.166) 78.906%,
+      rgba(207, 232, 245, 0.205) 81.273%,
+      rgba(220, 236, 244, 0.243) 83.639%,
+      rgba(232, 240, 244, 0.281) 86.005%,
+      rgba(244, 244, 244, 0.32) 88.372%),
+    #f8f5f5;
   overflow: hidden;
 }
+/* Stage shifted so the front card's centre sits where Figma's does (y 337.5). */
 .plans-cards-only .plans-stage {
-  top: -65px;
+  top: 63.5px;
   left: 50%;
   transform: translateX(-50%);
   border-radius: 0;
@@ -16,4 +38,5 @@
 }
 .plans-cards-only .stack { touch-action: pan-y; cursor: grab; }
 .plans-cards-only .stack.is-dragging { cursor: grabbing; }
-.plans-cards-only .stack:focus-visible { outline: 2px solid #575757; outline-offset: -2px; }
+.plans-cards-only .stack:focus,
+.plans-cards-only .stack:focus-visible { outline: none; }

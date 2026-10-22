@@ -1,0 +1,743 @@
+/* Plans stack → plan detail transition.
+   Detail: Figma "MegaETH (Internal)" node 4404:33902 (Light Mode, 402 × 1289). All coordinates below are
+   Figma frame px; the page scrolls inside a 402 × 874 screen, with the status bar and the × pinned. */
+
+@font-face {
+  font-family: "Suisse Intl Web";
+  src: url("../fonts/SuisseIntl-Light.otf") format("opentype");
+  font-weight: 300;
+  ascent-override: 98.6%;
+  descent-override: 31.1%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Suisse Intl Web";
+  src: url("../fonts/SuisseIntl-Regular.otf") format("opentype");
+  font-weight: 400;
+  ascent-override: 98.6%;
+  descent-override: 31.1%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Suisse Intl Web";
+  src: url("../fonts/SuisseIntl-Book.otf") format("opentype");
+  font-weight: 450;
+  ascent-override: 98.6%;
+  descent-override: 31.1%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Suisse Intl Web";
+  src: url("../fonts/SuisseIntl-Medium.otf") format("opentype");
+  font-weight: 500;
+  ascent-override: 98.6%;
+  descent-override: 31.1%;
+  line-gap-override: 0%;
+}
+
+.plans-transit {
+  --pt-black: #0e0e0e;
+  --pt-gray: #909090;
+  --pt-field: #f4f4f4;
+  height: 874px;
+  border-radius: 32px;
+  /* Home (Figma 4422:37225): #f4f4f4 screen; the blue gradient scrolls with the page (.pt-home-bg). */
+  background: #f4f4f4;
+  font-family: "Suisse Intl Web", "Suisse Int'l", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 450;
+  color: var(--pt-black);
+}
+
+.plans-transit .plan { cursor: pointer; }
+.plans-transit .stack.is-dragging .plan { cursor: grabbing; }
+/* The new home drags the cards directly; plans-stack-cards.js still needs the ruler element. */
+.plans-transit .ruler { display: none; }
+
+:where(.plans-transit) :where(p, h1, h2) { margin: 0; font: inherit; }
+:where(.plans-transit) :where(button) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.plans-transit button:focus { outline: none; }
+
+/* ---------- Home ---------- */
+
+.pt-home {
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  border-radius: inherit;
+}
+.pt-home::-webkit-scrollbar { display: none; }
+/* Recent Activity ends at y 1066; the rest clears the pinned nav. */
+.pt-home-page {
+  position: relative;
+  width: 402px;
+  height: 1180px;
+}
+/* 402 × 795, top corners 30 / 35. The in-between stops reproduce Figma's unpremultiplied blending. */
+.pt-home-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 402px;
+  height: 795px;
+  border-radius: 30px 35px 0 0;
+  background: linear-gradient(180deg,
+    rgba(254, 254, 253, 0) 2.7695%,
+    rgba(203, 221, 232, 0.08) 6.885%,
+    rgba(152, 188, 212, 0.16) 11.001%,
+    rgba(100, 154, 191, 0.24) 15.116%,
+    rgba(49, 121, 170, 0.32) 19.232%,
+    rgba(0, 85, 145, 0.32) 33.018%,
+    rgba(98, 157, 195, 0.32) 60.668%,
+    rgba(122, 175, 208, 0.282) 65.228%,
+    rgba(146, 192, 220, 0.243) 69.787%,
+    rgba(171, 210, 232, 0.205) 74.347%,
+    rgba(195, 228, 245, 0.166) 78.906%,
+    rgba(207, 232, 245, 0.205) 81.273%,
+    rgba(220, 236, 244, 0.243) 83.639%,
+    rgba(232, 240, 244, 0.281) 86.005%,
+    rgba(244, 244, 244, 0.32) 88.372%);
+}
+.pt-home-title {
+  position: absolute;
+  left: 21px;
+  top: 62.34px;
+  width: 370px;
+  font-size: 20px;
+  line-height: 1.32;
+  color: rgba(14, 14, 14, 0.43);
+  font-feature-settings: "salt" 1;
+}
+
+/* Add Plan / See all: 320 wide at (40.59, 538.96), gap 13.24. */
+.pt-home-actions {
+  position: absolute;
+  left: 40.59px;
+  top: 538.96px;
+  width: 320px;
+  display: flex;
+  gap: 13.24px;
+}
+.pt-pill {
+  flex: 1 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 8px 24px;
+  border-radius: 40.378px;
+  background: rgba(255, 255, 255, 0.64);
+  color: #000;
+  font-size: 16px;
+  line-height: 1.25;
+  white-space: nowrap;
+  font-feature-settings: "salt" 1;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.pt-pill:hover { background: rgba(255, 255, 255, 0.8); }
+.pt-pill:active { transform: scale(0.97); }
+.pt-pill-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35.112px;
+  height: 35.112px;
+  border-radius: 27.036px;
+  background: rgba(182, 182, 182, 0.19);
+}
+.pt-pill-arrow {
+  padding-bottom: 2.5px; /* Figma: 3.511 top / 6 bottom padding around the glyph */
+  font-weight: 300;
+  font-size: 19.624px;
+  line-height: 1.25;
+  font-feature-settings: "case" 1;
+}
+
+/* Recent Activity: 375 wide at (15.25, 664). */
+.pt-activity {
+  position: absolute;
+  left: 15.25px;
+  top: 664px;
+  width: 375px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.pt-activity-title {
+  font-size: 20px;
+  line-height: 1.32;
+  font-feature-settings: "salt" 1;
+}
+.pt-act-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-feature-settings: "salt" 1;
+}
+.pt-act-row { padding-top: 16px; }
+.pt-act-row + .pt-act-row { border-top: 1px solid rgba(189, 189, 189, 0.2); }
+.pt-act-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.pt-act-name,
+.pt-act-amount {
+  font-size: 16px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.pt-act-amount {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  width: 70px;
+  color: #359e3f;
+}
+.pt-act-plan {
+  margin-bottom: 2px;
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.24px;
+  color: #bdbdbd;
+}
+.pt-act-meta {
+  font-size: 14px;
+  line-height: 1.15;
+  letter-spacing: 0.14px;
+  color: #909090;
+}
+
+/* Status bar (bar at 9, 11.19). */
+.pt-home-status {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 60px;
+  z-index: 250;
+  pointer-events: none;
+}
+.pt-home-status > * { position: absolute; display: block; }
+.pt-home-time {
+  left: 20.95px;
+  top: 25.71px;
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 15.399px;
+  line-height: 15.399px;
+}
+.pt-home-signal { left: 312.82px; top: 25.41px; }
+.pt-home-wifi { left: 334.95px; top: 25.42px; }
+.pt-home-battery { left: 355.16px; top: 25.42px; }
+
+/* Nav - Mobile: 386.891 × 100.4 at (7, 773.6), pinned to the bottom. */
+.pt-nav {
+  position: absolute;
+  left: 7px;
+  bottom: 0;
+  z-index: 250;
+  width: 386.891px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17.63px 20.569px;
+}
+/* Nav Bar / AI Concierge: 2% black over 43% white, GLASS. */
+.pt-nav-bar,
+.pt-concierge {
+  border-radius: 58.599px;
+  background: linear-gradient(rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.02)), rgba(255, 255, 255, 0.43);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  backdrop-filter: blur(10px) saturate(1.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(255, 255, 255, 0.35);
+}
+.pt-nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 11.166px;
+  padding: 3.722px;
+}
+.pt-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 57.691px;
+  height: 57.691px;
+  padding-top: 8.043px;
+  padding-bottom: 9.192px;
+  border-radius: 93.05px;
+  transition: background-color 0.2s ease;
+}
+.pt-nav-item.is-active { background: #fff; }
+.pt-concierge {
+  position: relative;
+  flex: none;
+  width: 65.135px;
+  height: 65.135px;
+  overflow: hidden;
+}
+/* image 334: 75.794 square at (−5.33, −3.88); the bitmap fills 82.33% × 80.07% of it. */
+.pt-concierge span {
+  position: absolute;
+  left: -5.33px;
+  top: -3.88px;
+  width: 75.794px;
+  height: 75.794px;
+  overflow: hidden;
+}
+.pt-concierge img {
+  position: absolute;
+  left: 8.89%;
+  top: 9.93%;
+  width: 82.33%;
+  height: 80.07%;
+}
+
+/* ---------- Detail layer ---------- */
+
+.pt-detail {
+  position: absolute;
+  inset: 0;
+  z-index: 300;
+  font-family: "Suisse Intl Web", "Suisse Int'l", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 450;
+  color: var(--pt-black);
+  pointer-events: none;
+  visibility: hidden;
+}
+.pt-detail.is-open,
+.pt-detail.is-animating { visibility: visible; }
+.pt-detail.is-open { pointer-events: auto; }
+:where(.pt-detail) :where(p, h1, h2) { margin: 0; font: inherit; }
+:where(.pt-detail) :where(button) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+:where(.pt-detail) :where(img) { display: block; max-width: none; }
+
+/* Background #f4f4f4, the Pay screen under it, and the frosted "1.1 Onboarding" layer
+   (420 × 1660 at −14, −9.5; 51% #dadada; background blur 135.8). */
+.pt-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--pt-field);
+}
+.pt-under {
+  position: absolute;
+  inset: 0;
+  filter: blur(67.9px);
+}
+/* Personalized Rewards card (353.651 × 416.735 at 16, 829.5): yellow/light-yellow → yellow/dark-yellow.
+   Only its colour survives the blur, so the rest of the Pay screen is left out. */
+.pt-under-rewards {
+  position: absolute;
+  left: 16px;
+  top: 829.5px;
+  width: 353.651px;
+  height: 416.735px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ffff80 11.026%, #424200 88.372%);
+}
+.pt-frost {
+  position: absolute;
+  inset: 0;
+  background: rgba(218, 218, 218, 0.51);
+}
+
+.pt-scroll {
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.pt-scroll::-webkit-scrollbar { display: none; }
+.pt-page {
+  position: relative;
+  width: 402px;
+  height: 1289px;
+}
+
+/* ---------- Fields (frosted-layer children, shifted by −14, −9.5) ---------- */
+
+.pt-row {
+  position: absolute;
+  left: 16.51px;
+  width: 370px;
+  height: 88px;
+  display: flex;
+  gap: 12px;
+}
+.pt-field {
+  position: relative;
+  flex: 1 0 0;
+  height: 88px;
+  border-radius: 16px;
+  background: var(--pt-field);
+}
+.pt-field--wide {
+  position: absolute;
+  left: 16.51px;
+  width: 370px;
+}
+.pt-pencil {
+  position: absolute;
+  top: 10.17px;
+  right: 12px;
+}
+.pt-field-label {
+  position: absolute;
+  left: 15.44px;
+  top: 10.17px;
+  width: 106.136px;
+  font-size: 11.442px;
+  line-height: 17.162px;
+  letter-spacing: -0.1144px;
+  color: var(--pt-gray);
+}
+.pt-detail .pt-field-value {
+  position: absolute;
+  left: 15.44px;
+  top: 59px;
+  width: 106.136px;
+  font-size: 15.255px;
+  line-height: 19.069px;
+  letter-spacing: -0.1526px;
+}
+
+.pt-savings {
+  position: absolute;
+  left: 16.51px;
+  width: 370px;
+  height: 134px;
+  border-radius: 16px;
+  background: var(--pt-field);
+}
+.pt-sv-key,
+.pt-sv-val {
+  position: absolute;
+  font-size: 13.333px;
+  line-height: 19.999px;
+  letter-spacing: -0.1333px;
+  color: var(--pt-gray);
+  white-space: nowrap;
+}
+.pt-sv-key { left: 15.44px; }
+.pt-sv-val { left: 290.52px; }
+.pt-detail .pt-strong { color: var(--pt-black); }
+.pt-sv-rule {
+  position: absolute;
+  left: 17.91px;
+}
+
+.pt-latest {
+  position: absolute;
+  left: 16.51px;
+  width: 370px;
+  height: 326px;
+  border-radius: 16px;
+  background: var(--pt-field);
+}
+.pt-latest-head {
+  position: absolute;
+  left: 14.73px;
+  top: 17.5px;
+  width: 335px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pt-detail .pt-latest-head h2 {
+  font-size: 16px;
+  line-height: normal;
+}
+.pt-latest-head a {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.24px;
+  color: var(--pt-black);
+  text-decoration: none;
+  font-feature-settings: "salt" 1;
+}
+.pt-tx {
+  position: absolute;
+  left: 15px;
+  top: 85px;
+  width: 322px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.pt-tx-row {
+  display: flex;
+  justify-content: space-between;
+  height: 44px;
+  font-feature-settings: "salt" 1;
+}
+.pt-tx-name,
+.pt-tx-amount {
+  font-size: 14px;
+  line-height: 1.15;
+  letter-spacing: 0.14px;
+}
+.pt-tx-info { display: flex; flex-direction: column; gap: 7px; }
+.pt-detail .pt-tx-sub {
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.24px;
+  color: var(--pt-gray);
+}
+.pt-tx-rule { display: block; }
+
+/* ---------- Hero card: 370 × 450 at (17.06, 64.5), radius 16 ---------- */
+
+.pt-hero {
+  isolation: isolate;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%);
+  position: absolute;
+  left: 17px;
+  top: 64.5px;
+  width: 370px;
+  height: 450px;
+  overflow: hidden;
+  border-radius: 16px;
+  /* Figma radial fill under the photo (shows while it loads). */
+  background: radial-gradient(50% 50% at 50% 50%, #ffff80 0%, rgba(252, 252, 173, 0.77) 50%, rgba(248, 248, 218, 0.54) 100%);
+  transform: translateZ(0);
+}
+.pt-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+/* 370 × 216.356 band at the bottom, background blur 58. */
+.pt-hero-band {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 216.356px;
+  pointer-events: none;
+  /* Figma's blur fades in with the fill; without this the blur starts at a hard edge. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%);
+  mask-image: linear-gradient(to bottom, transparent, #000 45%);
+}
+.pt-hero-band::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--pt-photo-height, 450px);
+  background: var(--pt-photo) center / cover no-repeat;
+  filter: blur(29px);
+  transform: scale(1.12);
+}
+.pt-hero-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(236, 236, 235, 0) 0%, #eaeae9 105.56%);
+}
+.pt-hero-ui {
+  position: absolute;
+  inset: 0;
+  color: #fff;
+}
+/* The stack card's own content, kept on the hero while it grows / shrinks. */
+.pt-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 266px;
+  height: 266px;
+  pointer-events: none;
+  transform-origin: 0 0;
+}
+.pt-ghost .plan-content > * { opacity: 1; }
+.pt-ghost .plan-band { display: none; }
+
+.pt-detail .pt-hero-title {
+  position: absolute;
+  left: 23.08px;
+  top: 21.95px;
+  width: 176px;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.11;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+}
+.pt-detail .pt-hero-meta {
+  position: absolute;
+  left: 23.08px;
+  top: 59.99px;
+  font-size: 14px;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.39);
+  white-space: nowrap;
+}
+.pt-more {
+  position: absolute;
+  left: 318.09px;
+  top: 9.95px;
+  display: flex;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(244, 244, 244, 0.42);
+}
+.pt-hero-amount {
+  position: absolute;
+  left: 22.82px;
+  bottom: 157px;
+  width: 176px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pt-detail .pt-hero-value {
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.11;
+  letter-spacing: -0.3px;
+}
+.pt-detail .pt-hero-goal {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 12px;
+  opacity: 0.5;
+  white-space: nowrap;
+}
+/* All progress ticks share one canvas, avoiding separate rasterized layers. */
+.pt-bars {
+  position: absolute;
+  left: 25px;
+  bottom: 95px;
+  width: 320px;
+  height: 36px;
+}
+.pt-bars-canvas {
+  display: block;
+  width: 320px;
+  height: 36px;
+}
+/* Quick Action: 337 × 58, bottom 16, 11% white, GLASS. */
+.pt-add {
+  position: absolute;
+  left: 16.5px;
+  bottom: 16px;
+  width: 337px;
+  height: 58px;
+  border-radius: 50.8px;
+  background: rgba(255, 255, 255, 0.11);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+/* ---------- Pinned chrome ---------- */
+
+.plans-transit .pt-home-status,
+.plans-transit .pt-chrome-top { display: none; }
+
+.pt-chrome-top {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 60px;
+  pointer-events: none;
+}
+.pt-chrome-top > * { position: absolute; }
+.pt-time {
+  left: 37.87px;
+  top: 26.62px;
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 15.4px;
+  line-height: 15.4px;
+  color: var(--pt-black);
+}
+.pt-signal { left: 308.31px; top: 30.96px; }
+.pt-wifi { left: 330.44px; top: 29.52px; }
+.pt-batt-frame { left: 350.66px; top: 28.56px; width: 24.06px; height: 12.511px; }
+.pt-batt-cap { left: 375.34px; top: 33.37px; width: 1.278px; height: 3.85px; }
+.pt-batt-level { left: 352.89px; top: 30.8px; width: 19.441px; height: 8.017px; }
+.pt-island {
+  left: 133.94px;
+  top: 20.86px;
+  width: 133.237px;
+  height: 26.93px;
+  border-radius: 32.722px;
+  background: #000;
+}
+
+.pt-chrome-bottom {
+  position: absolute;
+  inset: auto 0 0;
+  height: 175px;
+  pointer-events: none;
+}
+/* 387.195 × 166.569, bottom −4.07: transparent → #dfe0c6. */
+.pt-bottom-fade {
+  position: absolute;
+  left: 7px;
+  bottom: -4.07px;
+  width: 387.195px;
+  height: 166.569px;
+  background: linear-gradient(180deg, rgba(231, 231, 223, 0), #dfe0c6);
+}
+/* Quick Action: 59.961 × 58.295, bottom 15.35, 13% white, radius 15, GLASS. */
+.pt-close {
+  position: absolute;
+  left: 170.52px;
+  bottom: 15.35px;
+  width: 59.961px;
+  height: 58.295px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.13);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+  pointer-events: auto;
+  transition: transform 0.2s ease;
+}
+.pt-close:active { transform: scale(0.94); }
+.pt-detail button:focus { outline: none; }
+.pt-detail button:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85); }

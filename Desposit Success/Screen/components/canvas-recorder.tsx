@@ -7,8 +7,9 @@ type Props = {
   filename: string
   beforeStart?: () => void
   onRecordingChange?: (recording: boolean) => void
+  transparentWebm?: boolean
 }
-export function CanvasRecorder({ containerRef, filename, beforeStart, onRecordingChange }: Props) {
+export function CanvasRecorder({ containerRef, filename, beforeStart, onRecordingChange, transparentWebm = false }: Props) {
   const session = useRef<ReturnType<typeof recordCanvas> | null>(null)
   const alive = useRef(false)
   const busy = useRef(false)
@@ -45,7 +46,7 @@ export function CanvasRecorder({ containerRef, filename, beforeStart, onRecordin
       if (!alive.current) return
       const canvas = containerRef.current?.querySelector("canvas")
       if (!canvas) throw new Error("未找到可录制的 Canvas。")
-      const recording = recordCanvas(canvas)
+      const recording = recordCanvas(canvas, 30, transparentWebm)
       session.current = recording
       setState("recording")
       const blob = await recording.finished
@@ -78,7 +79,7 @@ export function CanvasRecorder({ containerRef, filename, beforeStart, onRecordin
     <button type="button" onClick={state === "recording" ? stop : start} disabled={state === "starting" || state === "saving"}>
       {state === "recording" ? "停止并下载" : state === "saving" ? "正在保存…" : state === "starting" ? "准备录制…" : "录制 Canvas"}
     </button>
-    <span role="status" aria-live="polite">{state === "recording" ? "● 录制中 " + seconds + "s" : "仅 Canvas · 30 fps"}</span>
+    <span role="status" aria-live="polite">{state === "recording" ? "● 录制中 " + seconds + "s" : transparentWebm ? "透明 WebM · 仅 Canvas · 30 fps" : "仅 Canvas · 30 fps"}</span>
     {download && <a href={download.url} download={download.name}>下载上次录制</a>}
     {error && <span role="alert">{error}</span>}
   </div>
